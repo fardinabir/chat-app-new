@@ -17,4 +17,7 @@ module.exports = {
 
   // docker run --name redis-container -p 6389:6379 -d redis:latest
 
+  // docker run -p 2181:2181 zookeeper
+
+
   

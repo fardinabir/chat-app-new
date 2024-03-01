@@ -35,4 +35,4 @@ const getUserActive = (roomId) => {
 }
 
 
-module.exports = { saveMessageToRedis, getRecentMessages };
+module.exports = { saveMessageToRedis, getRecentMessages, setUserActive, getUserActive };

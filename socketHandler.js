@@ -1,5 +1,7 @@
 
-const { saveMessageToRedis, getRecentMessages } = require('./utils/redisUtils');
+const {
+  saveMessageToRedis, getRecentMessages, setUserActive, getUserActive,
+} = require('./utils/redisUtils');
 const {saveMessage} = require('./src/repos/chatRoom');
 const { verifyToken } = require('./utils/jwtUtils');
 
