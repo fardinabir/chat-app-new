@@ -2,28 +2,57 @@
 const redis = require('redis');
 
 
-const redisConfig = {
-  host: 'localhost', 
-  port: 6389, 
-};
+// const redisConfig = {
+//   host: 'localhost',
+//   port: 6389,
+// };
+//
+// const client = redis.createClient(redisConfig);
 
-const client = redis.createClient(redisConfig);
+const client = redis.createClient(); // Assuming you've created the client using `createClient`
 
-const saveMessageToRedis = (roomId, message) => {
-  console.log("A message landed --------- ", roomId, message)
-  client.lpush(roomId, JSON.stringify(message));
-};
+client.on('error', err => console.log('Redis Client Error ', err));
 
-const getRecentMessages = async (roomId, count) => {
-  return new Promise((resolve, reject) => {
-    client.lrange(roomId, 0, count - 1, (err, messages) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(messages.map((message) => JSON.parse(message)));
-      }
-    });
+client.connect().then(async () => {
+  console.log('Successfully connected to Redis server!');
+
+  process.on('SIGINT', () => {
+    client.quit()
+        .then(() => console.log('Disconnected from Redis server'))
+        .catch(err => console.error('Error disconnecting from Redis: ', err));
   });
-};
+}).catch(err => {
+  console.error('Error connecting to Redis:', err);
+});
 
-module.exports = { saveMessageToRedis, getRecentMessages };
+async function saveMessageToRedis(roomId, message) {
+  console.log("A message landed --------- ", roomId, message);
+  try {
+    // Push the new message to the list
+    await client.lpush(roomId, JSON.stringify(message));
+
+    // Trim the list to a maximum of 20 messages
+    await client.ltrim(roomId, 0, 19); // Keep the most recent 20
+  } catch (error) {
+    console.error("Error saving message to Redis:", error);
+  }
+}
+async function cacheRecentMessages(roomId, messages) {
+  const messageData = messages.map((message) => JSON.stringify(message));
+
+  try {
+    for (const message of messageData) {
+      await client.lpush(`recent_messages:${roomId}`, message);
+    }
+  } catch (error) {
+    console.error('Error caching messages:', error);
+    // Consider alternative actions if caching fails, like logging or using a fallback mechanism
+  }
+}
+
+async function getRecentMessages(roomId) {
+  const messages = await client.lrange(`recent_messages:${roomId}`, 0, -1);
+  return messages.map((message) => JSON.parse(message));
+}
+
+module.exports = { saveMessageToRedis, getRecentMessages, cacheRecentMessages };
