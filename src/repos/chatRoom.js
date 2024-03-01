@@ -1,15 +1,27 @@
 const Message = require('../models/Message');
 const {saveMessageToRedis, getRecentMessages, cacheRecentMessages} = require("../../utils/redisUtils");
 
-const saveMessage = (data) => {
-    console.log("---------saving data-------",data)
-    const message = Message.create({ message_text: data.message, sender_mail: "dummy", is_event: false, room_id : data.roomId });
-    saveMessageToRedis(data.roomId, message).then(r => {
-        console.log("Successfully added caching to redis")
-    }).catch(err => {
-        console.log("Error occurred while caching ", err)
-    });
-    return message.id
+async function saveMessage(data) {
+    console.log("---------saving data-------");
+
+    try {
+        const message = await Message.create({
+            message_text: data.message,
+            sender_mail: "dummy",
+            is_event: false,
+            room_id: data.roomId,
+        });
+
+        console.log("Message created successfully:", JSON.stringify(message));
+
+        await saveMessageToRedis(data.roomId, message);
+        console.log("Successfully added caching to redis");
+
+        return message.id;
+    } catch (error) {
+        console.error("Error saving message:", error);
+        throw error; // Re-throw the error to propagate it
+    }
 }
 
 const getMessage = async function (roomId) {

@@ -18,7 +18,7 @@ client.connect().then(async () => {
 });
 
 async function saveMessageToRedis(roomId, message) {
-  console.log("A message landed --------- ", roomId, message);
+  console.log("--------A message landed for Redis --------- ");
   const key = `room_id_${roomId}`;
   try {
 
@@ -27,7 +27,7 @@ async function saveMessageToRedis(roomId, message) {
     if (res1 === 0) {
       console.log("Could not set data to redis")
     } else {
-      console.log("Set data to redis")
+      console.log("Set data to redis under key ", key)
     }
 
   } catch (error) {
@@ -52,8 +52,9 @@ async function cacheRecentMessages(roomId, messages) {
   }
 }
 
-async function getRecentMessages(roomId) {
-  const messages = await client.lRange('bikes:repairs', 0, -1);
+async function getRecentMessages(roomId, count) {
+  const key = `room_id_${roomId}`;
+  const messages = await client.lRange(key, 0, count-1);
   return messages.map((message) => JSON.parse(message));
 }
 

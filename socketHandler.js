@@ -9,7 +9,7 @@ const { verifyToken } = require('./utils/jwtUtils');
 const socketHandler = (io) => {
     io.on('connection', (socket) => {
       console.log('A user connected : ', socket.id);
-      const {userId, userMail, err} = verifyToken(socket.handshake.headers.authorization.replace('BEARER ', ''))
+      const {userMail, err} = verifyToken(socket.handshake.headers.authorization.replace('BEARER ', ''))
       if(err) {
         console.log("Token error : ", err)
         socket.disconnect(true)
@@ -33,13 +33,20 @@ const socketHandler = (io) => {
   
       socket.on('sendMessage', (data) => {
         const { roomId, message } = data;
-        saveMessage(data);
+        (async () => {
+          try {
+            const messageId = await saveMessage(data);
+            console.log("Message saved successfully with ID:", messageId);
+          } catch (error) {
+            console.error("Error saving message:", error);
+          }
+        })();
         io.to(roomId).emit('receiveMessage', message);
       });
   
       socket.on('receiveMessage', (message) => {
         // Handle received message, e.g., log it or perform custom actions
-        console.log('---------Received message:', message);
+        console.log('---------Received message: ', message);
         
         // Broadcast the received message to all clients in the same room
         // const { roomId } = message;
@@ -53,7 +60,8 @@ const socketHandler = (io) => {
       });
   
       socket.on('disconnect', () => {
-        setUserActive({roomId, userMail, status:false})
+        // TODO Think About How to Handle this logic
+        // setUserActive({roomId, userMail, status:false})
         console.log('User disconnected');
       });
     });
