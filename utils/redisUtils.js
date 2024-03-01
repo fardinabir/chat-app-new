@@ -1,15 +1,7 @@
 // src/utils/redisUtils.js
 const redis = require('redis');
 
-
-// const redisConfig = {
-//   host: 'localhost',
-//   port: 6389,
-// };
-//
-// const client = redis.createClient(redisConfig);
-
-const client = redis.createClient(); // Assuming you've created the client using `createClient`
+const client = redis.createClient();
 
 client.on('error', err => console.log('Redis Client Error ', err));
 
@@ -55,7 +47,6 @@ async function getRecentMessages(roomId) {
   return messages.map((message) => JSON.parse(message));
 }
 
-module.exports = { saveMessageToRedis, getRecentMessages, cacheRecentMessages };
 const setUserActive = ({roomId, userMail, status}) => {
   // set to redis, make active/delete
 }
@@ -64,5 +55,4 @@ const getUserActive = (roomId) => {
   // fetch active list of users from redis
 }
 
-
-module.exports = { saveMessageToRedis, getRecentMessages };
+module.exports = { saveMessageToRedis, getRecentMessages, cacheRecentMessages, getUserActive, setUserActive };
