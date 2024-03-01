@@ -26,4 +26,13 @@ const getRecentMessages = async (roomId, count) => {
   });
 };
 
+const setUserActive = ({roomId, userMail, status}) => {
+  // set to redis, make active/delete
+}
+
+const getUserActive = (roomId) => {
+  // fetch active list of users from redis
+}
+
+
 module.exports = { saveMessageToRedis, getRecentMessages };
