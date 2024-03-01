@@ -19,31 +19,41 @@ client.connect().then(async () => {
 
 async function saveMessageToRedis(roomId, message) {
   console.log("A message landed --------- ", roomId, message);
+  const key = `room_id_${roomId}`;
   try {
-    // Push the new message to the list
-    await client.lpush(roomId, JSON.stringify(message));
 
-    // Trim the list to a maximum of 20 messages
-    await client.ltrim(roomId, 0, 19); // Keep the most recent 20
+    // Push the new message to the list
+    const res1 = await client.lPush(key, JSON.stringify(message));
+    if (res1 === 0) {
+      console.log("Could not set data to redis")
+    } else {
+      console.log("Set data to redis")
+    }
+
   } catch (error) {
     console.error("Error saving message to Redis:", error);
   }
 }
 async function cacheRecentMessages(roomId, messages) {
   const messageData = messages.map((message) => JSON.stringify(message));
-
+  const key = `room_id_${roomId}`;
   try {
     for (const message of messageData) {
-      await client.lpush(`recent_messages:${roomId}`, message);
+      // Push the new message to the list
+      const res1 = await client.lPush(key, JSON.stringify(message));
+      if (res1 === 0) {
+        console.log("Could not set data to redis")
+      } else {
+        console.log("Set data to redis")
+      }
     }
   } catch (error) {
     console.error('Error caching messages:', error);
-    // Consider alternative actions if caching fails, like logging or using a fallback mechanism
   }
 }
 
 async function getRecentMessages(roomId) {
-  const messages = await client.lrange(`recent_messages:${roomId}`, 0, -1);
+  const messages = await client.lRange('bikes:repairs', 0, -1);
   return messages.map((message) => JSON.parse(message));
 }
 

@@ -26,6 +26,6 @@ socketHandler(io);
 
 // Synchronize Sequelize models with the database
 (async () => {
-    const server = await startServer(PORT, app);
-    await handleShutdown(server);
+    const srv = await startServer(PORT, server);
+    await handleShutdown(srv);
 })();

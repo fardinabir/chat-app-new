@@ -2,13 +2,9 @@
 const http = require('http');
 const sequelize = require('./src/database/connection'); // Import Sequelize connection
 
-async function startServer(PORT, app) {
+async function startServer(PORT, server) {
     await sequelize.sync({ force: false });
     console.log('Sequelize models synchronized with the database');
-
-    // ... your application routes and middleware setup ...
-
-    const server = http.createServer(app);
 
     server.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);

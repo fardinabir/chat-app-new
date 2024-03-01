@@ -4,7 +4,11 @@ const {saveMessageToRedis, getRecentMessages, cacheRecentMessages} = require("..
 const saveMessage = (data) => {
     console.log("---------saving data-------",data)
     const message = Message.create({ message_text: data.message, sender_mail: "dummy", is_event: false, room_id : data.roomId });
-    saveMessageToRedis(data.roomId, message);
+    saveMessageToRedis(data.roomId, message).then(r => {
+        console.log("Successfully added caching to redis")
+    }).catch(err => {
+        console.log("Error occurred while caching ", err)
+    });
     return message.id
 }
 
