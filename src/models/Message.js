@@ -17,8 +17,15 @@ const Message = sequelize.define('Message', {
     allowNull: false,
     defaultValue: false,
   },
+  room_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
-Message.belongsTo(ChatRoom, { foreignKey: 'room_id', allowNull: false });
+Message.belongsTo(ChatRoom, {
+  foreignKey: 'room_id',
+  targetKey: 'name'
+});
 
 module.exports = Message;

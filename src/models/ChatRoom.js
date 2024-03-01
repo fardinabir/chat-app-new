@@ -8,7 +8,6 @@ const ChatRoom = sequelize.define('ChatRoom', {
     allowNull: false,
     unique: true,
   },
-  id
 });
 
 module.exports = ChatRoom;
