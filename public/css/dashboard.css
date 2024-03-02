@@ -1,0 +1,114 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  height: 100vh;
+  position: relative;
+}
+.container {
+  text-align: center;
+}
+h1 {
+  color: #333;
+}
+.btn-container {
+  margin-top: 20px;
+}
+.roomInput {
+  border: solid 0.5px;
+  border-radius: 5px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+}
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 5px;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn:hover {
+  background-color: #0056b3;
+}
+.leave-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.confirmBtn,
+.cancelBtn {
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 14px;
+}
+
+#room-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#room-list li {
+  background-color: #d0ecfa;
+  padding: 12px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+#room-list li:hover {
+  background-color: #90c5f3;
+}
+
+.roomListTitle {
+  margin-top: 45px;
+}

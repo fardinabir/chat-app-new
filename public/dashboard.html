@@ -1,0 +1,51 @@
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <script>
+      const token = sessionStorage.getItem("auth-token");
+      if (!token) {
+        window.location.href = "login.html";
+      }
+    </script>
+
+    <div class="container">
+      <h1>Welcome to Chat Room</h1>
+      <div class="btn-container">
+        <input
+          type="text"
+          class="roomInput"
+          id="message-input"
+          placeholder="Enter Room Name"
+        />
+        <button class="btn create-room">Create Room</button>
+        <button class="btn see-room">See Rooms</button>
+      </div>
+      <div class="error-text"></div>
+      <div class="chatRoomList">
+        <h2 class="roomListTitle">Available Chat Rooms</h2>
+        <ul id="room-list">
+          <!-- <li>Room 1</li>
+          <li>Room 2</li>
+          <li>Room 3</li> -->
+        </ul>
+      </div>
+      <button class="btn leave-btn">Leave</button>
+    </div>
+
+    <!-- <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Enter Room Name</h3>
+            <input type="text" id="roomNameInput" placeholder="Room Name">
+            <button id="confirmBtn">Confirm</button>
+            <button id="cancelBtn">Cancel</button>
+            <div class="error-text"></div>
+        </div>
+    </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

@@ -1,10 +1,7 @@
 // src/utils/redisUtils.js
 const redis = require('redis');
-const math = require('math')
-const redisConfig = {
-  url: 'redis://localhost:6379'
-};
-
+const math = require('math');
+const { redisConfig } = require('../config');
 const client = redis.createClient(redisConfig);
 
 client.on('error', err => {
