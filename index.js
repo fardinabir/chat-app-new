@@ -25,7 +25,11 @@ app.use('/api', authenticate, chatRoutes);
 socketHandler(io);
 
 // Initialize kafka consumer
-consume(io)
+consume(io).then(r => {
+    console.log("Working consumer")
+}).catch(err => {
+    console.log("Occurred error ", err)
+});
 
 // Synchronize Sequelize models with the database
 (async () => {
