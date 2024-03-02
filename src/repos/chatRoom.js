@@ -13,12 +13,12 @@ async function saveMessage(messageBody, mail, isEvent, roomId) {
             room_id: roomId,
         });
 
-        console.log("Message created successfully:", JSON.stringify(message));
+        console.log("Message created successfully:", message.dataValues);
 
         await saveMessageToRedis(roomId, message);
         console.log("Successfully added caching to redis");
 
-        return message.id;
+        return message.dataValues;
     } catch (error) {
         console.error("Error saving message:", error);
         throw error; // Re-throw the error to propagate it
