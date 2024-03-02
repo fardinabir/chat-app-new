@@ -55,10 +55,13 @@ const socketHandler = (io) => {
       socket.on('receiveMessage', (message) => {
         // Handle received message, e.g., log it or perform custom actions
         console.log('---------Received message: ', message);
-        
-        // Broadcast the received message to all clients in the same room
-        // const { roomId } = message;
-        // io.to(roomId).emit('receiveMessage', message);
+        // send the received message to all clients in the same room TODO: should we use broadcast here instead of only emit.
+        socket
+            .to(roomId)
+            .emit(
+                'receiveMessage',
+                message,
+            );
       });
 
       // * GetRecentMessages Logics
