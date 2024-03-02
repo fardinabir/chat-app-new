@@ -15,7 +15,8 @@ module.exports = {
       CHAT_MESSAGES: "chat-messages",
       CHAT_EVENTS: "chat-events"
     },
-    jwt_expiry: '2h'
+    jwt_expiry: '2h',
+    jwt_secret: "a_strong_secret_key"
   };
 
   // docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root-pw -e MYSQL_DATABASE=chat-app -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d -p 3306:3306 mysql:latest
