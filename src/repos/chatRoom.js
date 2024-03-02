@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
 const {saveMessageToRedis, getRecentMessages, cacheRecentMessages} = require("../../utils/redisUtils");
+const recentMessages = 20
 
 async function saveMessage(data) {
     console.log("---------saving data-------");
@@ -27,7 +28,7 @@ async function saveMessage(data) {
 const getMessage = async function (roomId) {
     try {
         // Try retrieving messages from Redis
-        let messages = await getRecentMessages(roomId, 20);
+        let messages = await getRecentMessages(roomId, recentMessages);
         // Fallback to database if Redis is unavailable or messages are empty
         if (!messages || messages.length === 0) {
             messages = await Message.findAll({

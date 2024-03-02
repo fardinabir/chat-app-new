@@ -20,10 +20,10 @@ const socketHandler = (io) => {
         socket.join(roomId);
 
         // ? Get the 10 latest messages of the room that user is joining
-        let count = 10
-        const messages = await getRecentMessages(roomId, count);
-        //TODO: Discuss about this, will all the members see messages again?
-        socket.emit('receiveMessage', messages);
+        // let count = 10
+        // const messages = await getRecentMessages(roomId, count);
+        // //TODO: Discuss about this, will all the members see messages again?
+        // socket.emit('receiveMessage', messages);
         socket.broadcast
         .to(roomId)
         .emit(
@@ -70,6 +70,7 @@ const socketHandler = (io) => {
         const messages = await getRecentMessages(roomId, count);
         socket.emit('recentMessages', messages);
       });
+
 
       // * disconnect Logics
       socket.on('disconnect', (roomId, userMail) => {

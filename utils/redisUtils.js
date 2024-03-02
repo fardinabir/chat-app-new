@@ -41,7 +41,7 @@ async function cacheRecentMessages(roomId, messages) {
   try {
     for (const message of messageData) {
       // Push the new message to the list
-      const res1 = await client.lPush(key, JSON.stringify(message));
+      const res1 = await client.rPush(key, message);
       if (res1 === 0) {
         console.log("Could not set data to redis")
       } else {
