@@ -3,7 +3,7 @@ const Message = require('../models/Message');
 const saveMessage = (data) => {
     // saveMessageToRedis(roomId, message);
     console.log("---------saving data-------",data)
-    const message = Message.create({ message_text: data.message, sender_mail: "dummy", is_event: false, room_id : data.roomId });
+    const message = Message.create(data);
     return message.id
 }
 

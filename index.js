@@ -9,6 +9,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const chatRoutes = require('./src/routes/chatRoutes');
 const sequelize = require('./src/database/connection'); // Import Sequelize connection
 const socketHandler = require('./socketHandler');
+const { consume } = require('./src/kafka/consumer');
 
 const app = express();
 const server = http.createServer(app);
@@ -23,6 +24,9 @@ app.use('/api', authenticate, chatRoutes);
 
 // Use the socketHandler
 socketHandler(io);
+
+// Initialize kafka consumer
+consume(io)
 
 // Synchronize Sequelize models with the database
 sequelize.sync({ force: false }).then(() => {
