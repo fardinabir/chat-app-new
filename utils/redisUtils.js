@@ -73,9 +73,9 @@ const setUserActive = async (socketId, roomId, userMail) => {
         userMail: userMail,
       },
   ).then( () => {
-    console.log(`Number of fields were added: ${fieldsAdded}`);
+    console.log("User Status updated to redis. ", fieldsAdded);
   }).catch(err => {
-    console.log("Error occured ", err)
+    console.log("Error occurred ", err)
   })
   await AddOnlineUsers(roomId, userMail)
 }
@@ -84,7 +84,12 @@ const setUserOffline = async (socketId) => {
   // set to redis, make active/delete
   const {roomId, userMail} = await client.hGetAll(socketId);
   console.log(userMail, roomId)
-  await DeleteOnlineUsers(roomId, userMail)
+  await DeleteOnlineUsers(roomId, userMail).then(async () => {
+    await client.DEL(socketId)
+    console.log("User sent to offline status")
+  }).catch(err => {
+    console.log("Error occurred ", err)
+  })
 }
 
 const getOnlineUsers = async (roomId) => {
