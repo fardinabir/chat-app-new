@@ -1,5 +1,5 @@
 const {Kafka} = require('kafkajs');
-const { topic: {CHAT_MESSAGES, CHAT_EVENTS}, kafkaConfig } = require('../../config');
+const { kafkaConfig } = require('../../config');
 const { TokenExpiredError } = require('jsonwebtoken');
 const {saveMessage} = require("../repos/chatRoom");
 
@@ -12,8 +12,8 @@ const consumer = kafka.consumer({ groupId: 'kafka' })
 const consume = async (io) => {
   console.log("------------ Initializing Kafka Consumer -----------")
   await consumer.connect()
-  await consumer.subscribe({topic: CHAT_MESSAGES, fromBeginning: true })
-  await consumer.subscribe({topic: CHAT_EVENTS, fromBeginning: true })
+  await consumer.subscribe({topic: kafkaConfig.topic.CHAT_MESSAGES, fromBeginning: true })
+  await consumer.subscribe({topic: kafkaConfig.topic.CHAT_EVENTS, fromBeginning: true })
   await consumer.run({
     eachMessage: async ({ topic, message }) => {
       console.log("****************** Arrived in Kafka Consumer ******************")

@@ -1,6 +1,6 @@
 // config.js
 module.exports = {
-    development: {
+    database: {
       username: 'user',
       password: '1234',
       database: 'chat-app',
@@ -11,17 +11,17 @@ module.exports = {
       // Production configuration
       // ...
     },
-    topic: {
-      CHAT_MESSAGES: "chat-messages",
-      CHAT_EVENTS: "chat-events"
-    },
     jwt_expiry: '2h',
     jwt_secret: "a_strong_secret_key",
     redisConfig : {
-      url: 'redis://localhost:6389'
+      url: 'redis://localhost:6379'
     },
     kafkaConfig : {
-      host: 'localhost:9092'
+      host: 'localhost:9092',
+      topic: {
+          CHAT_MESSAGES: "chat-messages",
+          CHAT_EVENTS: "chat-events"
+        },
     }
   };
 

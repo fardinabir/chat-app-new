@@ -2,7 +2,7 @@ const { getRecentMessages, setUserActive, setUserOffline, getOnlineUsers } = req
 const {saveMessage} = require('./src/repos/chatRoom');
 const { verifyToken } = require('./utils/jwtUtils');
 const { produce } = require('./src/kafka/producer');
-const { topic: {CHAT_MESSAGES, CHAT_EVENTS} } = require('./config');
+const { kafkaConfig } = require('./config');
 
 // socketHandler.js
 const socketHandler = (io) => {
@@ -32,7 +32,7 @@ const socketHandler = (io) => {
 
         await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
-        await produce(newMessage, CHAT_EVENTS)
+        await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
       });
 
       // * SendMessage Logics
@@ -40,7 +40,7 @@ const socketHandler = (io) => {
         const { roomId, message } = data;
         // saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
-        produce(newMessage, CHAT_MESSAGES)
+        produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
         // io.to(roomId).emit('receiveMessage', newMessage);
       });
   
@@ -69,6 +69,8 @@ const socketHandler = (io) => {
       socket.on('disconnect', async () => {
         try {
           const { userMail, roomId } = await setUserOffline(socket.id);
+          console.log("test Line")
+          console.log("this data was received -> ", userMail, roomId)
           socket.to(roomId).emit('receiveMessage', `User ${userMail} left the chat`);
           console.log(`User ${userMail} with socket ID ${socket.id} disconnected from room ${roomId}`);
         } catch (error) {

@@ -85,14 +85,15 @@ const setUserOffline = async (socketId) => {
   // set to redis, make active/delete
   const {roomId, userMail} = await client.hGetAll(socketId);
   console.log(userMail, roomId)
-  await DeleteOnlineUsers(roomId, userMail).then(async () => {
+  try {
+    await DeleteOnlineUsers(roomId, userMail)
     await client.DEL(socketId)
     console.log("User sent to offline status")
     // Return user information as an object
-    return { userMail, roomId };
-  }).catch(err => {
-    console.log("Error occurred ", err)
-  })
+    return { "userMail": userMail, "roomId": roomId };
+  } catch (e) {
+    console.log("Error occurred ", e)
+  }
 }
 
 const getOnlineUsers = async (roomId) => {
