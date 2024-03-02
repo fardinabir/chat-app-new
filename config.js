@@ -4,7 +4,7 @@ module.exports = {
       username: 'user',
       password: '1234',
       database: 'chat-app',
-      host: 'localhost',
+      host: '192.168.38.212',
       dialect: 'mysql',
     },
     production: {

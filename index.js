@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/api', authenticate, chatRoutes);
+app.use(express.static('public'));
 
 // Use the socketHandler
 socketHandler(io);
