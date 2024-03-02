@@ -30,7 +30,7 @@ const socketHandler = (io) => {
         // socket.emit('receiveMessage', `Welcome to room no ${roomId}`);
         setUserActive(socket.id, roomId, userMail)
 
-        saveMessage(`${userMail} joined the room`, userMail, true, roomId);
+        await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
         await produce(newMessage, CHAT_EVENTS)
       });

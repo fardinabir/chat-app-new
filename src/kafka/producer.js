@@ -17,6 +17,16 @@ const produce = async (res,  topic) => {
             value: JSON.stringify(res) }]
     });
     console.log('Message sent successfully', res)
+
+    process.on('SIGINT', handleShutdown);
+    process.on('SIGTERM', handleShutdown);
+}
+
+async function handleShutdown(signal) {
+    console.log(`Received signal ${signal}, shutting down Kafka producer...`);
+    await producer.disconnect();
+    console.log("Kafka producer disconnected");
+    process.exit(0); // Exit the process after consumer disconnects
 }
 
 // produce("hello polok, kafka is working.............", CHAT_EVENTS)
