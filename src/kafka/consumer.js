@@ -21,7 +21,7 @@ const consume = async (io) => {
       const obj = JSON.parse(message.value);
       console.log("our object",obj);
 
-      if(topic === CHAT_MESSAGES || topic === CHAT_EVENTS){
+      if(topic === kafkaConfig.topic.CHAT_MESSAGES || topic === kafkaConfig.topic.CHAT_EVENTS){
         await saveMessage(obj.messageText, obj.userMail, obj.isEvent, obj.roomId).then(async () => {
           console.log("saved message to the database")
         }).catch(err => {

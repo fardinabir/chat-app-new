@@ -17,7 +17,8 @@ const socketHandler = (io) => {
       console.log("Connected user : ", userMail)
 
       // * JoinRoom - Logics
-      socket.on('joinRoom', async (roomId) => {
+      socket.on('joinRoom', async (data) => {
+        const { roomId } = data;
         console.log("joined Room ---------", roomId);
         socket.join(roomId);
 
@@ -40,6 +41,7 @@ const socketHandler = (io) => {
       // * SendMessage Logics
       socket.on('sendMessage', (data) => {
         const { roomId, message } = data;
+        console.log('Going from here');
         // saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
         // produce(newMessage, CHAT_MESSAGES)
@@ -64,7 +66,8 @@ const socketHandler = (io) => {
       });
 
       // * GetOnlineUsers Logics
-      socket.on('getOnlineUsers', async (roomId) => {
+      socket.on('getOnlineUsers', async (data) => {
+        const { roomId } = data;
         const users = await getOnlineUsers(roomId);
         console.log('Online users', users);
         socket.emit('onlineUsers', {
