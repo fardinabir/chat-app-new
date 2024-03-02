@@ -1,10 +1,7 @@
 // src/utils/redisUtils.js
 const redis = require('redis');
-const math = require('math')
-const redisConfig = {
-    host: 'localhost',
-    port: 6389,
-};
+const math = require('math');
+const { redisConfig } = require('../config');
 const client = redis.createClient(redisConfig);
 
 client.on('error', err => console.log('Redis Client Error ', err));

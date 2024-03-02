@@ -1,11 +1,11 @@
 const {Kafka} = require('kafkajs');
-const { topic: {CHAT_MESSAGES, CHAT_EVENTS} } = require('../../config');
+const { topic: {CHAT_MESSAGES, CHAT_EVENTS}, kafkaConfig } = require('../../config');
 const { TokenExpiredError } = require('jsonwebtoken');
 const {saveMessage} = require("../repos/chatRoom");
 
 const kafka = new Kafka({
   clientId: 'my-app',
-  brokers: ['localhost:9092', 'localhost:9092']
+  brokers: [kafkaConfig.host, kafkaConfig.host]
 })
 const consumer = kafka.consumer({ groupId: 'kafka' })
 

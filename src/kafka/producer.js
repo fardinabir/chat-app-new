@@ -1,10 +1,9 @@
 const {Kafka} = require('kafkajs');
-const { topic: {CHAT_MESSAGES, CHAT_EVENTS} } = require('../../config');
+const { kafkaConfig } = require('../../config');
 
 const kafka = new Kafka({
   clientId: 'my-app',
-  //your kafka container port
-  brokers: ['localhost:9092', 'localhost:9092']
+  brokers: [kafkaConfig.host, kafkaConfig.host]
 })
 
 const producer = kafka.producer()
