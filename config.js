@@ -11,7 +11,7 @@ module.exports = {
       // Production configuration
       // ...
     },
-    jwt_expiry: '2h',
+    jwt_expiry: '6h',
     jwt_secret: "a_strong_secret_key",
     redisConfig : {
       url: 'redis://localhost:6379'
