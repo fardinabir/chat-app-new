@@ -1,9 +1,4 @@
-
-const { getRecentMessages, setUserOnlineStatus, AddOnlineUsers, DeleteOnlineUsers } = require('./utils/redisUtils');
-const { saveMessage } = require('./src/repos/chatRoom');
-const {
-  saveMessageToRedis, getRecentMessages, setUserActive, getUserActive, setUserOffline
-} = require('./utils/redisUtils');
+const { getRecentMessages, setUserActive, setUserOffline, getOnlineUsers } = require('./utils/redisUtils');
 const {saveMessage} = require('./src/repos/chatRoom');
 const { verifyToken } = require('./utils/jwtUtils');
 const { produce } = require('./src/kafka/producer');
@@ -37,7 +32,7 @@ const socketHandler = (io) => {
 
         saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
-        produce(newMessage, CHAT_EVENTS)
+        await produce(newMessage, CHAT_EVENTS)
       });
 
       // * SendMessage Logics
@@ -64,9 +59,17 @@ const socketHandler = (io) => {
         const messages = await getRecentMessages(roomId, count);
         socket.emit('recentMessages', messages);
       });
-  
+
+      // * GetOnlineUsers Logics
+      socket.on('getOnlineUsers', async (roomId) => {
+        const users = await getOnlineUsers(roomId);
+        socket.emit('onlineUsers', users);
+      });
+
       socket.on('disconnect', () => {
-        setUserOffline(socket.id)
+        setUserOffline(socket.id).then(r => {
+          console.log("successfully set user offline", socket.id)
+        })
         console.log('-----------User disconnected-----------');
       });
     });
