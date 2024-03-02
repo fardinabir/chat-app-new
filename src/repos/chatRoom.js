@@ -1,10 +1,10 @@
 const Message = require('../models/Message');
 
-const saveMessage = (data) => {
+const saveMessage = (message, mail, is_event, roomId) => {
     // saveMessageToRedis(roomId, message);
-    console.log("---------saving data-------",data)
-    const message = Message.create(data);
-    return message.id
+    console.log("---------saving data-------",message, mail, is_event, roomId)
+    const msg = Message.create({ message_text: message, sender_mail: mail, is_event: is_event, room_id : roomId });
+    return msg
 }
 
 const getMessage = async function (roomId) {

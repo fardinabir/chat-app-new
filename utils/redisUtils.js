@@ -26,7 +26,11 @@ const getRecentMessages = async (roomId, count) => {
   });
 };
 
-const setUserActive = ({roomId, userMail, status}) => {
+const setUserActive = (socketId, roomId, userMail) => {
+  // set to redis, make active/delete
+}
+
+const setUserOffline = (socketId) => {
   // set to redis, make active/delete
 }
 
@@ -35,4 +39,4 @@ const getUserActive = (roomId) => {
 }
 
 
-module.exports = { saveMessageToRedis, getRecentMessages, setUserActive, getUserActive };
+module.exports = { saveMessageToRedis, getRecentMessages, setUserActive, getUserActive, setUserOffline };

@@ -1,6 +1,6 @@
 
 const {
-  saveMessageToRedis, getRecentMessages, setUserActive, getUserActive,
+  saveMessageToRedis, getRecentMessages, setUserActive, getUserActive, setUserOffline
 } = require('./utils/redisUtils');
 const {saveMessage} = require('./src/repos/chatRoom');
 const { verifyToken } = require('./utils/jwtUtils');
@@ -33,19 +33,14 @@ const socketHandler = (io) => {
         // socket.emit('receiveMessage', `Welcome to room no ${roomId}`);
         setUserActive({roomId, userMail, status:true})
 
-        saveMessage({
-          message_text: `${userMail} joined the room`, 
-          sender_mail: userMail,
-          is_event: true,
-          room_id : roomId
-        });
+        saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
         produce(newMessage, CHAT_EVENTS)
       });
   
       socket.on('sendMessage', (data) => {
         const { roomId, message } = data;
-        saveMessage(data);
+        saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
         produce(newMessage, CHAT_MESSAGES)
         // io.to(roomId).emit('receiveMessage', newMessage);
@@ -67,8 +62,8 @@ const socketHandler = (io) => {
       });
   
       socket.on('disconnect', () => {
-        setUserActive({roomId, userMail, status:false})
-        console.log('User disconnected');
+        setUserOffline(socket.id)
+        console.log('-----------User disconnected-----------');
       });
     });
   };

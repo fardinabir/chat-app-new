@@ -21,7 +21,7 @@ const consume = async (io) => {
       console.log("our object",obj);
 
       if(topic === CHAT_MESSAGES){
-        // io.to(obj.roomId).emit('receiveMessage', obj);
+        io.to(obj.roomId).emit('receiveMessage', obj);
       }
    }, })}
 
