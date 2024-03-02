@@ -13,7 +13,6 @@ const authenticate = (req, res, next) => {
     const decoded = verifyToken(token.replace('BEARER ', '')); // Remove 'Bearer ' from the token
     req.userId = decoded.userId; // Attach the user ID & mail to the request for later use
     req.userMail = decoded.userMail;
-    console.log("Decoded token data --------", decoded)
     next();
   } catch (error) {
     console.error(error);

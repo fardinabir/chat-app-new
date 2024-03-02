@@ -1,21 +1,59 @@
 const Message = require('../models/Message');
+const {saveMessageToRedis, getRecentMessages, cacheRecentMessages} = require("../../utils/redisUtils");
+const recentMessages = 20
 
-const saveMessage = (message, mail, is_event, roomId) => {
-    // saveMessageToRedis(roomId, message);
-    console.log("---------saving data-------",message, mail, is_event, roomId)
-    const msg = Message.create({ message_text: message, sender_mail: mail, is_event: is_event, room_id : roomId });
-    return msg
+async function saveMessage(messageBody, mail, isEvent, roomId) {
+    console.log("---------saving data-------");
+
+    try {
+        const message = await Message.create({
+            message_text: messageBody,
+            sender_mail: mail,
+            is_event: isEvent,
+            room_id: roomId,
+        });
+
+        console.log("Message created successfully:", JSON.stringify(message));
+
+        await saveMessageToRedis(roomId, message);
+        console.log("Successfully added caching to redis");
+
+        return message.id;
+    } catch (error) {
+        console.error("Error saving message:", error);
+        throw error; // Re-throw the error to propagate it
+    }
 }
 
 const getMessage = async function (roomId) {
     try {
-      const message = await Message.findAll({
-        where: { room_id: roomId }
-      });
-      // console.log("--------- retrived messages ------", message)
-      return message;
+        // Try retrieving messages from Redis
+        let messages = await getRecentMessages(roomId, recentMessages);
+        // Fallback to database if Redis is unavailable or messages are empty
+        if (!messages || messages.length === 0) {
+            messages = await Message.findAll({
+                where: {
+                    room_id: roomId,
+                },
+                limit: 20, // Retrieve only the last 20 messages
+                order: [['createdAt', 'DESC']], // Order by creation time (recent first)
+            });
+            await cacheRecentMessages(roomId, messages); // Cache retrieved messages
+        }
+
+        return messages;
     } catch (error) {
-      throw new Error(`Error retrieving message by ID: ${error.message}`);
+        let messages = await Message.findAll({
+            where: {
+                room_id: roomId,
+            },
+            limit: 20, // Retrieve only the last 20 messages
+            order: [['createdAt', 'DESC']], // Order by creation time (recent first)
+        });
+        await cacheRecentMessages(roomId, messages); // Cache retrieved messages
+        console.log("Error retrieving message from redis ", error)
+        return messages
+
     }
   };
 

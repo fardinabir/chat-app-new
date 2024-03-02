@@ -29,9 +29,7 @@ const getChatMessages = async (req, res) => {
   try {
     const { id } = req.params;
     const messages = await getMessage(id)
-    console.log("--------- retrived messages ------", messages)
-    // const count = req.query.count || 10;
-    // const messages = await getRecentMessages(id, count);
+    console.log("--------- retrived messages ------\n", messages)
     res.json(messages);
   } catch (error) {
     console.error(error);
