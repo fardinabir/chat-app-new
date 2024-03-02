@@ -1,5 +1,4 @@
 // index.js
-require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
@@ -8,6 +7,7 @@ const { authenticate } = require('./src/middleware/authMiddleware');
 const authRoutes = require('./src/routes/authRoutes');
 const chatRoutes = require('./src/routes/chatRoutes');
 const socketHandler = require('./socketHandler');
+const { consume } = require('./src/kafka/consumer');
 const { startServer, handleShutdown } = require('./serverHandler');
 
 const app = express();
@@ -23,6 +23,9 @@ app.use('/api', authenticate, chatRoutes);
 
 // Use the socketHandler
 socketHandler(io);
+
+// Initialize kafka consumer
+consume(io)
 
 // Synchronize Sequelize models with the database
 (async () => {

@@ -1,8 +1,11 @@
 // src/utils/redisUtils.js
 const redis = require('redis');
 const math = require('math')
-
-const client = redis.createClient();
+const redisConfig = {
+    host: 'localhost',
+    port: 6389,
+};
+const client = redis.createClient(redisConfig);
 
 client.on('error', err => console.log('Redis Client Error ', err));
 
@@ -61,36 +64,27 @@ async function getRecentMessages(roomId, count) {
   return messages.map((message) => JSON.parse(message));
 }
 
-const setUserOnlineStatus = async ({roomId, userMail, online}) => {
-  key = `${roomId}_${userMail}`
+const setUserActive = async (socketId, roomId, userMail) => {
   // set to redis, make active/delete
-    await client.exists(key, async (err, reply) => {
-      if (reply === 1) { // Key is in redis
-        if (online) { // status should be online
-          console.log('exists');
-        } else { // status should be offline, so we delete the key
-          await client.del(key, function(err, response) {
-            if (response === 1) {
-              console.log("Deleted Successfully!")
-            } else{
-              console.log("Cannot delete")
-            }
-          })
-        }
-      } else { // Key Is not in redis
-        if (online) { // status should be online
-          await client.set(key, function(err, response) {
-            if (response === 1) {
-              console.log("set redis data successfully")
-            } else{
-              console.log("Cannot set redis data")
-            }
-          })
-        } else {
-          console.log('user is not online')
-        }
-      }
-    });
+  const fieldsAdded = await client.hSet(
+      socketId,
+      {
+        roomId: roomId,
+        userMail: userMail,
+      },
+  ).then( () => {
+    console.log(`Number of fields were added: ${fieldsAdded}`);
+  }).catch(err => {
+    console.log("Error occured ", err)
+  })
+  await AddOnlineUsers(roomId, userMail)
+}
+
+const setUserOffline = async (socketId) => {
+  // set to redis, make active/delete
+  const {roomId, userMail} = await client.hGetAll(socketId);
+  console.log(userMail, roomId)
+  await DeleteOnlineUsers(roomId, userMail)
 }
 
 const getOnlineUsers = async (roomId) => {
@@ -142,4 +136,34 @@ const DeleteOnlineUsers = async (roomId, memberEmail) => {
   }
 }
 
-module.exports = { saveMessageToRedis, getRecentMessages, cacheRecentMessages, getOnlineUsers, setUserOnlineStatus, AddOnlineUsers, DeleteOnlineUsers };
+// const SetUserOfflineCode = async () => {
+//   await client.exists(key, async (err, reply) => {
+//     if (reply === 1) { // Key is in redis
+//       if (online) { // status should be online
+//         console.log('exists');
+//       } else { // status should be offline, so we delete the key
+//         await client.del(key, function(err, response) {
+//           if (response === 1) {
+//             console.log("Deleted Successfully!")
+//           } else{
+//             console.log("Cannot delete")
+//           }
+//         })
+//       }
+//     } else { // Key Is not in redis
+//       if (online) { // status should be online
+//         await client.set(key, function(err, response) {
+//           if (response === 1) {
+//             console.log("set redis data successfully")
+//           } else{
+//             console.log("Cannot set redis data")
+//           }
+//         })
+//       } else {
+//         console.log('user is not online')
+//       }
+//     }
+//   });
+// }
+
+module.exports = { saveMessageToRedis, getRecentMessages, cacheRecentMessages, getOnlineUsers, setUserActive, setUserOffline };

@@ -2,20 +2,20 @@ const Message = require('../models/Message');
 const {saveMessageToRedis, getRecentMessages, cacheRecentMessages} = require("../../utils/redisUtils");
 const recentMessages = 20
 
-async function saveMessage(data) {
+async function saveMessage(messageBody, mail, isEvent, roomId) {
     console.log("---------saving data-------");
 
     try {
         const message = await Message.create({
-            message_text: data.message,
-            sender_mail: "dummy",
-            is_event: false,
-            room_id: data.roomId,
+            message_text: messageBody,
+            sender_mail: mail,
+            is_event: isEvent,
+            room_id: roomId,
         });
 
         console.log("Message created successfully:", JSON.stringify(message));
 
-        await saveMessageToRedis(data.roomId, message);
+        await saveMessageToRedis(roomId, message);
         console.log("Successfully added caching to redis");
 
         return message.id;

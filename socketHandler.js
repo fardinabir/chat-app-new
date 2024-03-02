@@ -1,7 +1,13 @@
 
 const { getRecentMessages, setUserOnlineStatus, AddOnlineUsers, DeleteOnlineUsers } = require('./utils/redisUtils');
 const { saveMessage } = require('./src/repos/chatRoom');
+const {
+  saveMessageToRedis, getRecentMessages, setUserActive, getUserActive, setUserOffline
+} = require('./utils/redisUtils');
+const {saveMessage} = require('./src/repos/chatRoom');
 const { verifyToken } = require('./utils/jwtUtils');
+const { produce } = require('./src/kafka/producer');
+const { topic: {CHAT_MESSAGES, CHAT_EVENTS} } = require('./config');
 
 // socketHandler.js
 const socketHandler = (io) => {
@@ -10,6 +16,7 @@ const socketHandler = (io) => {
       const {userMail, err} = verifyToken(socket.handshake.headers.authorization.replace('BEARER ', ''))
       if(err) {
         console.log("Token error : ", err)
+        socket.emit('receiveMessage', 'Token Unauthorized');
         socket.disconnect(true)
       }
       console.log("Connected user : ", userMail)
@@ -19,50 +26,37 @@ const socketHandler = (io) => {
         console.log("joined Room ---------", roomId);
         socket.join(roomId);
 
-        // ? Get the 10 latest messages of the room that user is joining
-        // let count = 10
-        // const messages = await getRecentMessages(roomId, count);
-        // //TODO: Discuss about this, will all the members see messages again?
-        // socket.emit('receiveMessage', messages);
-        socket.broadcast
-        .to(roomId)
-        .emit(
-          'receiveMessage',
-          `${userMail} joined the room`,
-        );
-        socket.emit('receiveMessage', `Welcome to room no ${roomId}`);
+        // socket.broadcast
+        // .to(roomId)
+        // .emit(
+        //   'receiveMessage',
+        //   `${userMail} joined the room`,
+        // );
+        // socket.emit('receiveMessage', `Welcome to room no ${roomId}`);
+        setUserActive(socket.id, roomId, userMail)
 
-        await AddOnlineUsers(roomId, userMail).then( () => {
-          console.log("Added user to the room with online status")
-        })
+        saveMessage(`${userMail} joined the room`, userMail, true, roomId);
+        const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
+        produce(newMessage, CHAT_EVENTS)
       });
 
       // * SendMessage Logics
       socket.on('sendMessage', (data) => {
         const { roomId, message } = data;
-        (async () => {
-          try {
-            const messageId = await saveMessage(data);
-            console.log("Message saved successfully with ID:", messageId);
-          } catch (error) {
-            console.error("Error saving message:", error);
-          }
-        })();
-        io.to(roomId).emit('receiveMessage', message);
+        // saveMessage(message, userMail, false, roomId);
+        const newMessage = prepareMessage(roomId, message ,userMail,false)
+        produce(newMessage, CHAT_MESSAGES)
+        // io.to(roomId).emit('receiveMessage', newMessage);
       });
+  
+      // socket.on('receiveMessage', (message) => {
+      //   // Handle received message, e.g., log it or perform custom actions
+      //   console.log('---------Received message:', message);
 
-      // * ReceiveMessage Logics
-      socket.on('receiveMessage', (message) => {
-        // Handle received message, e.g., log it or perform custom actions
-        console.log('---------Received message: ', message);
-        // send the received message to all clients in the same room TODO: should we use broadcast here instead of only emit.
-        socket
-            .to(roomId)
-            .emit(
-                'receiveMessage',
-                message,
-            );
-      });
+      //   // Broadcast the received message to all clients in the same room
+      //   // const { roomId } = message;
+      //   // io.to(roomId).emit('receiveMessage', message);
+      // });
 
       // * GetRecentMessages Logics
       socket.on('getRecentMessages', async (data) => {
@@ -70,21 +64,16 @@ const socketHandler = (io) => {
         const messages = await getRecentMessages(roomId, count);
         socket.emit('recentMessages', messages);
       });
-
-
-      // * disconnect Logics
-      socket.on('disconnect', (roomId, userMail) => {
-        DeleteOnlineUsers(roomId, userMail).then(r => {
-          console.log("deleted users")
-        }).catch(err => {
-          console.log("Error occurred ", err)
-        })
-        console.log('User disconnected');
+  
+      socket.on('disconnect', () => {
+        setUserOffline(socket.id)
+        console.log('-----------User disconnected-----------');
       });
     });
   };
   
 
+const prepareMessage = (roomId, messageText, userMail, isEvent) =>  ({roomId, messageText, userMail, isEvent})
 
-  module.exports = socketHandler;
+module.exports = socketHandler;
   
