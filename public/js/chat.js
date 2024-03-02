@@ -9,9 +9,13 @@ const socket = io('http://localhost:3000', {
   }
 });
 
-const url = window.location.href;
-const parts = url.split("?=");
-const number = parts[1];
+let searchParams = new URLSearchParams(window.location.search);
+
+let number = searchParams.get("roomId");
+let roomName = searchParams.get("roomName");
+
+console.log(number); // Outputs: 12
+console.log(roomName); // Outputs: Discussion
 
 console.log(number);
 
@@ -165,7 +169,11 @@ socket.on('connect', () => {
   // socket.emit('sendMessage', { roomId: number, message });
   });
 
-  socket.on('onlineUsers', ({users}) => {
-    console.log('getting users', users);
+  socket.on('onlineUsers', ({roomId, users}) => {
+    console.log('getting users', {roomId, users});
+
+
+    const html = Mustache.render(sidebarTemplate,{roomName, users});
+    document.querySelector('#sidebar').innerHTML = html;
   });
 

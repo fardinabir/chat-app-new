@@ -67,7 +67,10 @@ const socketHandler = (io) => {
       socket.on('getOnlineUsers', async (roomId) => {
         const users = await getOnlineUsers(roomId);
         console.log('Online users', users);
-        socket.emit('onlineUsers', users);
+        socket.emit('onlineUsers', {
+          roomId: roomId,
+          users: users,
+        });
       });
 
       socket.on('disconnect', async () => {
