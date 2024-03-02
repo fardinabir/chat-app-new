@@ -158,8 +158,14 @@ socket.on('connect', () => {
     console.log('Connected to server');
 
     socket.emit('joinRoom', number);
+    socket.emit('getOnlineUsers', number);
 
   // Example: Sending a message
   const message = "Hello everyone!";
   // socket.emit('sendMessage', { roomId: number, message });
   });
+
+  socket.on('onlineUsers', ({users}) => {
+    console.log('getting users', users);
+  });
+

@@ -97,7 +97,7 @@ const getOnlineUsers = async (roomId) => {
     if (onlineMembers.length === 0) {
       console.log("no online members")
     } else {
-      console.log("retrieved online members")
+      console.log("retrieved online members", onlineMembers);
       return onlineMembers
     }
 

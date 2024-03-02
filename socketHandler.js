@@ -32,7 +32,9 @@ const socketHandler = (io) => {
 
         await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
-        await produce(newMessage, CHAT_EVENTS)
+        // await produce(newMessage, CHAT_EVENTS)
+        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
+        io.to(roomId).emit('receiveMessage', newMessage);
       });
 
       // * SendMessage Logics
@@ -40,8 +42,9 @@ const socketHandler = (io) => {
         const { roomId, message } = data;
         // saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
-        produce(newMessage, CHAT_MESSAGES)
-        // io.to(roomId).emit('receiveMessage', newMessage);
+        // produce(newMessage, CHAT_MESSAGES)
+        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
+        io.to(roomId).emit('receiveMessage', newMessage);
       });
   
       // socket.on('receiveMessage', (message) => {
@@ -63,6 +66,7 @@ const socketHandler = (io) => {
       // * GetOnlineUsers Logics
       socket.on('getOnlineUsers', async (roomId) => {
         const users = await getOnlineUsers(roomId);
+        console.log('Online users', users);
         socket.emit('onlineUsers', users);
       });
 
