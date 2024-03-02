@@ -17,7 +17,8 @@ const socketHandler = (io) => {
       console.log("Connected user : ", userMail)
 
       // * JoinRoom - Logics
-      socket.on('joinRoom', async (roomId) => {
+      socket.on('joinRoom', async (data) => {
+        const { roomId } = data;
         console.log("joined Room ---------", roomId);
         socket.join(roomId);
 
@@ -33,6 +34,7 @@ const socketHandler = (io) => {
         await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
         await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
+        // io.to(roomId).emit('receiveMessage', newMessage);
       });
 
       // * SendMessage Logics
@@ -61,7 +63,8 @@ const socketHandler = (io) => {
       });
 
       // * GetOnlineUsers Logics
-      socket.on('getOnlineUsers', async (roomId) => {
+      socket.on('getOnlineUsers', async (data) => {
+        const { roomId } = data;
         const users = await getOnlineUsers(roomId);
         socket.emit('onlineUsers', users);
       });

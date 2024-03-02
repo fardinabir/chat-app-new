@@ -74,7 +74,7 @@ const setUserActive = async (socketId, roomId, userMail) => {
         userMail: userMail,
       },
   ).then( () => {
-    console.log("User Status updated to redis. ", fieldsAdded);
+    // console.log("User Status updated to redis. ", fieldsAdded);
   }).catch(err => {
     console.log("Error occurred ", err)
   })
@@ -104,7 +104,7 @@ const getOnlineUsers = async (roomId) => {
     if (onlineMembers.length === 0) {
       console.log("no online members")
     } else {
-      console.log("retrieved online members")
+      console.log("retrieved online members : ", onlineMembers)
       return onlineMembers
     }
 
