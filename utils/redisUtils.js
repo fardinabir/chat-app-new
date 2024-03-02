@@ -2,12 +2,15 @@
 const redis = require('redis');
 const math = require('math')
 const redisConfig = {
-    host: 'localhost',
-    port: 6389,
+  url: 'redis://localhost:6379'
 };
+
 const client = redis.createClient(redisConfig);
 
-client.on('error', err => console.log('Redis Client Error ', err));
+client.on('error', err => {
+  console.log('Redis Client Error ', err)
+  process.exit(1)
+});
 
 client.connect().then(async () => {
   console.log('Successfully connected to Redis server!');
@@ -19,6 +22,7 @@ client.connect().then(async () => {
   });
 }).catch(err => {
   console.error('Error connecting to Redis:', err);
+  process.exit(1);
 });
 
 async function saveMessageToRedis(roomId, message) {
@@ -87,6 +91,8 @@ const setUserOffline = async (socketId) => {
   await DeleteOnlineUsers(roomId, userMail).then(async () => {
     await client.DEL(socketId)
     console.log("User sent to offline status")
+    // Return user information as an object
+    return { userMail, roomId };
   }).catch(err => {
     console.log("Error occurred ", err)
   })

@@ -66,11 +66,14 @@ const socketHandler = (io) => {
         socket.emit('onlineUsers', users);
       });
 
-      socket.on('disconnect', () => {
-        setUserOffline(socket.id).then(r => {
-          console.log("successfully set user offline", socket.id)
-        })
-        console.log('-----------User disconnected-----------');
+      socket.on('disconnect', async () => {
+        try {
+          const { userMail, roomId } = await setUserOffline(socket.id);
+          socket.to(roomId).emit('receiveMessage', `User ${userMail} left the chat`);
+          console.log(`User ${userMail} with socket ID ${socket.id} disconnected from room ${roomId}`);
+        } catch (error) {
+          console.error('Error handling disconnected user:', error);
+        }
       });
     });
   };
