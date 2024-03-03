@@ -25,11 +25,11 @@ const socketHandler = (io) => {
         socket.emit('receiveMessage', `Welcome ${userMail} to room no ${roomId}`);
         setUserActive(socket.id, roomId, userMail)
 
-        await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
-        // await produce(newMessage, CHAT_EVENTS)
+        await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
         saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
-        io.to(roomId).emit('receiveMessage', newMessage);
+        // io.to(roomId).emit('receiveMessage', newMessage);
+        socket.emit("getOnlineUsers", {roomId});
       });
 
       // * SendMessage Logics
@@ -38,9 +38,8 @@ const socketHandler = (io) => {
         console.log('Going from here');
         // saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
-        // produce(newMessage, CHAT_MESSAGES)
-        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
-        io.to(roomId).emit('receiveMessage', newMessage);
+        produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
+        // io.to(roomId).emit('receiveMessage', newMessage);
       });
   
       // socket.on('receiveMessage', (message) => {
@@ -73,10 +72,15 @@ const socketHandler = (io) => {
       socket.on('disconnect', async () => {
         try {
           const { userMail, roomId } = await setUserOffline(socket.id);
-          console.log("test Line")
           console.log("this data was received -> ", userMail, roomId)
-          socket.to(roomId).emit('receiveMessage', `User ${userMail} left the chat`);
+          // socket.to(roomId).emit('receiveMessage', `User ${userMail} left the chat`);
           console.log(`User ${userMail} with socket ID ${socket.id} disconnected from room ${roomId}`);
+
+          // await saveMessage(`User ${userMail} left the room`, userMail, true, roomId);
+          const newMessage = prepareMessage(roomId, `User ${userMail} left the room`, userMail, true)
+          produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
+          // io.to(roomId).emit('receiveMessage', newMessage);
+          socket.emit("getOnlineUsers", {roomId});
         } catch (error) {
           console.error('Error handling disconnected user:', error);
         }

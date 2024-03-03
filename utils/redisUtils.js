@@ -67,6 +67,7 @@ async function getRecentMessages(roomId, count) {
 
 const setUserActive = async (socketId, roomId, userMail) => {
   // set to redis, make active/delete
+  console.log("User Status update attempt to redis. ", socketId, roomId, userMail);
   const fieldsAdded = await client.hSet(
       socketId,
       {
@@ -74,7 +75,7 @@ const setUserActive = async (socketId, roomId, userMail) => {
         userMail: userMail,
       },
   ).then( () => {
-    // console.log("User Status updated to redis. ", fieldsAdded);
+    console.log("User Status updated to redis. ", fieldsAdded);
   }).catch(err => {
     console.log("Error occurred ", err)
   })
