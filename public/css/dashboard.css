@@ -98,15 +98,17 @@ h1 {
 }
 
 #room-list li {
-  background-color: #d0ecfa;
-  padding: 12px;
-  margin-bottom: 5px;
+  background-color: #4ca2fff4;
+  padding: 14px;
+  margin-bottom: 8px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 'bold';
+  color: #fff;
 }
 
 #room-list li:hover {
-  background-color: #90c5f3;
+  background-color: #367ecce4;
 }
 
 .roomListTitle {

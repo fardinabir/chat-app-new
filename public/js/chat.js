@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000", {
+const socket = io({
   transportOptions: {
     polling: {
       extraHeaders: {
@@ -16,7 +16,7 @@ let roomName = searchParams.get("roomName");
 const fetchMessages = async (number) => {
   try {
     const response = await axios.get(
-      `http://localhost:3000/api/chat/${number}/messages`,
+      `/api/chat/${number}/messages`,
       {
         headers: {
           Authorization: `BEARER ${sessionStorage.getItem("auth-token")}`,
@@ -57,7 +57,7 @@ async function useData(number) {
           if (msg.is_event) {
             const html = Mustache.render(messageTemplate, {
               userName: "",
-              message: message.text,
+              message: msg.message_text,
               createdAt: "",
             });
             document.querySelector(".message__body").style.fontSize = "12px";

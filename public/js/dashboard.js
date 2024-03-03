@@ -24,7 +24,7 @@ createBtn.addEventListener("click", function () {
   } else {
     axios
       .post(
-        "http://localhost:3000/api/chat",
+        "/api/chat",
         {
           name: roomName,
         },
@@ -51,7 +51,7 @@ createBtn.addEventListener("click", function () {
 seeRoomBtn.addEventListener('click', async () => {
     const availableRooms = await axios
     .get(
-      "http://localhost:3000/api/chat",
+      "/api/chat",
       {
         headers: {
           Authorization: `BEARER ${sessionStorage.getItem("auth-token")}`,
@@ -108,25 +108,6 @@ seeRoomBtn.addEventListener('click', async () => {
 
 const handleRoomClick = async (room) => {
     console.log('Room Clicked');
-    // await axios
-    // .get(
-    //   `http://localhost:3000/api/chat/${room.id}/messages`,
-    //   {
-    //     headers: {
-    //       Authorization: `BEARER ${sessionStorage.getItem("auth-token")}`,
-    //     },
-    //   }
-    // )
-    // .then((response) => {
-    //   console.log('rooms',response.data);
-    //   // alert("New room created");
-    //   // return response.data;
-    // })
-    // .catch((error) => {
-    //   // document.querySelector(
-    //   //   ".available-error-text"
-    //   // ).innerHTML = `<p>${error.response.data.error}</p>`;
-    // });
     window.location.href = `chat.html?roomId=${room.id}&roomName=${room.name}`
 }
 
