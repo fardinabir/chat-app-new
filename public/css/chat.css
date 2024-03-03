@@ -71,7 +71,7 @@ button:disabled {
 .chat__sidebar {
   height: 100vh;
   color: #fff;
-  background: #333744;
+  background: #4ca2fff4;
   width: 225px;
   overflow-y: scroll;
 }
@@ -125,7 +125,7 @@ button:disabled {
 .room-title {
   font-weight: 400;
   font-size: 22px;
-  background: #2c2f3a;
+  background: #367ecce4;
   padding: 24px;
 }
 .list-title {
