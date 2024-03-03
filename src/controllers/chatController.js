@@ -29,7 +29,7 @@ const getChatMessages = async (req, res) => {
   try {
     const { id } = req.params;
     const messages = await getMessage(id)
-    console.log("--------- retrived messages ------\n", messages)
+    console.log("--------- retrived messages ------\n")
     res.json(messages);
   } catch (error) {
     console.error(error);

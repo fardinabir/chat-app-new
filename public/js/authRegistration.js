@@ -11,7 +11,7 @@ regButton.addEventListener("click", (e) => {
       "<p>Both email and password are required!</p>";
   } else {
     axios
-      .post("http://localhost:3000/auth/register", {
+      .post("http://localhost:3000/api/register", {
         email,
         password,
       })

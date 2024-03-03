@@ -74,7 +74,7 @@ const setUserActive = async (socketId, roomId, userMail) => {
         roomId: roomId,
         userMail: userMail,
       },
-  ).then( () => {
+  ).then( (fieldsAdded) => {
     console.log("User Status updated to redis. ", fieldsAdded);
   }).catch(err => {
     console.log("Error occurred ", err)

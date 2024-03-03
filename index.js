@@ -3,8 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
-const { authenticate } = require('./src/middleware/authMiddleware');
-const authRoutes = require('./src/routes/authRoutes');
 const chatRoutes = require('./src/routes/chatRoutes');
 const socketHandler = require('./socketHandler');
 const { consume } = require('./src/kafka/consumer');
@@ -18,8 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use('/auth', authRoutes);
-app.use('/api', authenticate, chatRoutes);
+app.use('/api', chatRoutes);
 app.use(express.static('public'));
 
 // Use the socketHandler
