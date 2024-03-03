@@ -14,7 +14,7 @@ module.exports = {
     jwt_expiry: '6h',
     jwt_secret: "a_strong_secret_key",
     redisConfig : {
-      url: 'redis://localhost:6379'
+      url: 'redis://localhost:6389'
     },
     kafkaConfig : {
       host: 'localhost:9092',

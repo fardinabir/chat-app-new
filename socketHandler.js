@@ -84,7 +84,7 @@ const socketHandler = (io) => {
           console.log(`User ${userMail} with socket ID ${socket.id} disconnected from room ${roomName}`);
 
           // await saveMessage(`User ${userMail} left the room`, userMail, true, roomName);
-          const newMessage = prepareMessage(roomName, `User ${userMail} left the room`, userMail, true)
+          const newMessage = prepareMessage(roomName, `${userMail} left the room`, userMail, true)
           produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
           // io.to(roomName).emit('receiveMessage', newMessage);
           // hit online users change

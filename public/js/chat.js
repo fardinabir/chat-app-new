@@ -174,7 +174,7 @@ $messageForm.addEventListener("submit", (e) => {
 
   const message = e.target.elements.message.value;
 
-  socket.emit("sendMessage", { roomName: number, message });
+  socket.emit("sendMessage", { roomName, message });
   $messaageFormInput.value = "";
   // useData(number);
 });
@@ -184,9 +184,9 @@ socket.on("connect", () => {
 
   // Example: Sending a message
   const message = "Hello everyone!";
-  // socket.emit('sendMessage', { roomName: number, message });
-  socket.emit("joinRoom", { roomName: number });
-  socket.emit("getOnlineUsers", { roomName: number });
+  // socket.emit('sendMessage', { roomName, message });
+  socket.emit("joinRoom", { roomName });
+  socket.emit("getOnlineUsers", { roomName });
 });
 
 socket.on("onlineUsers", ({ roomName, users }) => {

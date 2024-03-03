@@ -32,7 +32,7 @@ services:
   redis-container:
     image: 'redis:latest'
     ports:
-      - '6379:6379'
+      - '6389:6379'
 
 # docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root-pw -e MYSQL_DATABASE=chat-app 
 # -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d -p 3306:3306 mysql:latest
