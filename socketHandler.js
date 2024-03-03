@@ -22,13 +22,7 @@ const socketHandler = (io) => {
         console.log("joined Room ---------", roomId);
         socket.join(roomId);
 
-        // socket.broadcast
-        // .to(roomId)
-        // .emit(
-        //   'receiveMessage',
-        //   `${userMail} joined the room`,
-        // );
-        // socket.emit('receiveMessage', `Welcome to room no ${roomId}`);
+        socket.emit('receiveMessage', `Welcome ${userMail} to room no ${roomId}`);
         setUserActive(socket.id, roomId, userMail)
 
         await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
