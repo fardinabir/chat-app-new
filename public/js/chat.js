@@ -54,15 +54,13 @@ async function useData(number) {
       fetchedData.reverse();
       fetchedData.map(async (msg) => {
         try {
-          if(!msg.is_event){
-            const html = Mustache.render(messageTemplate, {
-              userName: msg.sender_mail,
-              message: msg.message_text,
-              createdAt: moment(msg.createdAt).format("h:mm a"),
-            });
-            $messages.insertAdjacentHTML("beforeend", html);
-            autoscroll();
-          }
+          const html = Mustache.render(messageTemplate, {
+            userName: msg.sender_mail,
+            message: msg.message_text,
+            createdAt: moment(msg.createdAt).format("h:mm a"),
+          });
+          $messages.insertAdjacentHTML("beforeend", html);
+          autoscroll();
         } catch (error) {
           console.error("Error rendering message:", error);
         }

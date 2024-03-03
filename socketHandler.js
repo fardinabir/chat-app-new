@@ -27,8 +27,6 @@ const socketHandler = (io) => {
 
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
         await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
-        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
-        // io.to(roomId).emit('receiveMessage', newMessage);
         // hit online users change
         const users = await getOnlineUsers(roomId);
         console.log('Online users', users);

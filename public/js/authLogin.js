@@ -11,7 +11,7 @@ loginButton.addEventListener("click", (e) => {
       "<p>Both email and password are required!</p>";
   } else {
     axios
-      .post("http://localhost:3000/auth/login", {
+      .post("http://localhost:3000/api/login", {
         email,
         password,
       })
