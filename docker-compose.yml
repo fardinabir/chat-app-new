@@ -13,7 +13,7 @@ services:
     environment:
       - KAFKA_BROKER_ID=1
       - 'KAFKA_LISTENERS=PLAINTEXT://:9092'
-      - 'KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092'
+      - 'KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092'
       - 'KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181'
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
@@ -33,6 +33,16 @@ services:
     image: 'redis:latest'
     ports:
       - '6389:6379'
+
+  node-app:
+    build:
+      dockerfile: DockerfileServer
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql-container
+      - redis-container
+      - kafka
 
 # docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root-pw -e MYSQL_DATABASE=chat-app 
 # -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d -p 3306:3306 mysql:latest

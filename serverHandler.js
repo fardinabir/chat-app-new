@@ -3,15 +3,17 @@ const http = require('http');
 const sequelize = require('./src/database/connection'); // Import Sequelize connection
 
 async function startServer(PORT, server) {
-    await sequelize.sync({ force: false });
-    console.log('Sequelize models synchronized with the database');
-
-    server.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`);
+    await sequelize.sync({ force: false }).then(() => {
+        console.log('Sequelize models synchronized with the database');
+        server.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+        return server; // Return the server object for graceful shutdown
+    }).catch((error) => {
+        console.error('Error synchronizing Sequelize models:', error.message);
+        return
     });
-
-    return server; // Return the server object for graceful shutdown
-}
+   }
 
 async function handleShutdown(server) {
     process.on('SIGINT', () => {

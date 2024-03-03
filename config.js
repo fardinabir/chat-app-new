@@ -4,20 +4,16 @@ module.exports = {
       username: 'user',
       password: '1234',
       database: 'chat-app',
-      host: 'localhost',
+      host: 'mysql-container', // 'localhost'
       dialect: 'mysql',
-    },
-    production: {
-      // Production configuration
-      // ...
     },
     jwt_expiry: '6h',
     jwt_secret: "a_strong_secret_key",
     redisConfig : {
-      url: 'redis://localhost:6389'
+      url: 'redis://redis-container:6379', //'redis://localhost:6389'
     },
     kafkaConfig : {
-      host: 'localhost:9092',
+      host: 'kafka:9092', //'localhost:9092',
       topic: {
           CHAT_MESSAGES: "chat-messages",
           CHAT_EVENTS: "chat-events"
