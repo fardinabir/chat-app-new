@@ -1,7 +1,7 @@
 // src/controllers/authController.js
 const User = require('../models/User');
 const { generateToken } = require('../../utils/jwtUtils');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const register = async (req, res) => {
   try {

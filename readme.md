@@ -1,37 +1,43 @@
-Node.JS Chat
+NodeJS Chat Application
 ============
-[![GitHub Stars](https://img.shields.io/github/stars/IgorAntun/node-chat.svg)](https://github.com/IgorAntun/node-chat/stargazers) [![GitHub Issues](https://img.shields.io/github/issues/IgorAntun/node-chat.svg)](https://github.com/IgorAntun/node-chat/issues) [![Current Version](https://img.shields.io/badge/version-1.0.7-green.svg)](https://github.com/IgorAntun/node-chat) [![Live Demo](https://img.shields.io/badge/demo-online-green.svg)](https://igorantun.com/chat) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/IgorAntun/node-chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-This is a node.js chat application powered by SockJS and Express that provides the main functions you'd expect from a chat, such as emojis, private messages, an admin system, etc.
+## Introduction
+This is a node.js chat application powered by Kafka, Redis, and WebSocket(Socket.io). This provides robustness in realtime message processing and scalability which is the core requirement for almost every chat application for handling various chat interactions.
+<p align="center">
+  <a href="https://postimg.cc/XXrjccfC">
+    <img src="https://i.postimg.cc/NG4KtdLp/Screenshot-2024-03-03-at-10-03-43-PM-100.png" width="341" height="400" alt="Screenshot">
+  </a>
+</p>
 
-![Chat Preview](http://i.imgur.com/lgRe8z4.png)
 
 ## Features
-- User friendly UI for the user.
+- User friendly UI for interaction
 - User Registration
-- User Login as well as authentication
+- User Login/ Authentication
 - Room specific chat services
 - Private messaging
-- Online Users tracking
-- Low latency message retrieval using *Redis Caching*
-- Scalable messaging using *Kafka*
+- Active online users tracking
+- Low latency message retrieval using Redis caching
+- Scalable message processing with Kafka
 
-![User Features](http://i.imgur.com/WbF1fi2.png)
+## Table of Contents
 
-![Admin Features](http://i.imgur.com/xQFaadt.png)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Feedback](#feedback)
+- [Contributors](#contributors)
+- [Build Process](#build-process)
+- [Backers](#backers-)
+- [Sponsors](#sponsors-)
+- [Acknowledgments](#acknowledgments)
 
-
-#### There are 3 admin levels:
-- **Helper:** Can delete chat messages
-- **Moderator:** The above plus the ability to kick and ban users
-- **Administrator:** All the above plus send global alerts and promote/demote users
 
 ---
 
-## Setup
-Clone this repo to your desktop and run `npm install` to install all the dependencies.
+## Installation
+Clone this repo to your desktop and run `docker-compose up` to get the setup ready.
 
-You might want to look into `config.json` to make change the port you want to use and set up a SSL certificate.
+You might want to look into `docker-compose.yml` file to make change the ports you want to use and set up customize cluster.
 
 ---
 
