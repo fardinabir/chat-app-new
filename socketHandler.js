@@ -23,13 +23,21 @@ const socketHandler = (io) => {
         socket.join(roomId);
 
         socket.emit('receiveMessage', `Welcome ${userMail} to room no ${roomId}`);
-        setUserActive(socket.id, roomId, userMail)
+        await setUserActive(socket.id, roomId, userMail)
 
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
         await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
-        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
-        // io.to(roomId).emit('receiveMessage', newMessage);
-        socket.emit("getOnlineUsers", {roomId});
+        // hit online users change
+        const users = await getOnlineUsers(roomId);
+        console.log('Online users', users);
+        // socket.to(roomId).emit('onlineUsers', {
+        //   roomId: roomId,
+        //   users: users,
+        // });
+        io.to(roomId).emit('onlineUsers', {
+          roomId: roomId,
+          users: users,
+        });
       });
 
       // * SendMessage Logics
@@ -80,7 +88,13 @@ const socketHandler = (io) => {
           const newMessage = prepareMessage(roomId, `User ${userMail} left the room`, userMail, true)
           produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
           // io.to(roomId).emit('receiveMessage', newMessage);
-          socket.emit("getOnlineUsers", {roomId});
+          // hit online users change
+          const users = await getOnlineUsers(roomId);
+          console.log('Online users', users);
+          io.to(roomId).emit('onlineUsers', {
+            roomId: roomId,
+            users: users,
+          });
         } catch (error) {
           console.error('Error handling disconnected user:', error);
         }

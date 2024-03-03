@@ -31,14 +31,14 @@ input {
 button {
   cursor: pointer;
   padding: 12px;
-  background: #7c5cbf;
+  background: #007bff;
   border: none;
   color: #fff;
   font-size: 16px;
   transition: background 0.3s ease;
 }
 button:hover {
-  background: #6b47b8;
+  background: #0056b3;
 }
 button:disabled {
   cursor: default;
