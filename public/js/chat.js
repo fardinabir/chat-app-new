@@ -56,15 +56,46 @@ async function useData(number) {
       fetchedData.map(async (msg) => {
         try {
           if (msg.is_event) {
-            const html = Mustache.render(messageTemplate, {
-              userName: "",
-              message: message.text,
-              createdAt: "",
-            });
-            document.querySelector(".message__body").style.fontSize = "12px";
-            document.querySelector(".message__body").style.textAlign = "center";
-            $messages.insertAdjacentHTML("beforeend", html);
-            autoscroll();
+          const htmlNew = Mustache.render(messageTemplate, {
+            userName: "",
+            message: msg.message_text,
+            createdAt: "",
+          });
+          
+          // Create a temporary element to apply styles
+          const tempElement = document.createElement('div');
+          tempElement.innerHTML = htmlNew;
+          
+          // Change the style of the desired element
+          const messageBodyElement = tempElement.querySelector('.message__body');
+          messageBodyElement.style.fontSize = '16px';
+          messageBodyElement.style.textAlign = 'center';
+          messageBodyElement.style.color = 'grey';
+          
+          // Insert the modified HTML into the messages container
+          $messages.insertAdjacentHTML('beforeend', tempElement.innerHTML);
+          autoscroll();
+            
+
+
+
+            // const html = Mustache.render(messageTemplate, {
+            //   userName: "",
+            //   message: msg.text,
+            //   createdAt: "",
+            // });
+            // document.querySelector(".message__body").style.fontSize = "12px";
+            // document.querySelector(".message__body").style.textAlign = "center";
+            // $messages.insertAdjacentHTML("beforeend", html);
+            // autoscroll();
+
+            // const html = Mustache.render(messageTemplate, {
+            //   userName: msg.sender_mail,
+            //   message: msg.message_text,
+            //   createdAt: moment(msg.createdAt).format("h:mm a"),
+            // });
+            // $messages.insertAdjacentHTML("beforeend", html);
+            // autoscroll();
           } else {
             const html = Mustache.render(messageTemplate, {
               userName: msg.sender_mail,
