@@ -17,7 +17,9 @@ regButton.addEventListener("click", (e) => {
       })
       .then((response) => {
         console.log(response.data);
-        window.location.href = "login.html";
+        // window.location.href = "login.html";
+        sessionStorage.setItem('auth-token', response.data.token);
+        window.location.href = "dashboard.html";
       })
       .catch((error) => {
         document.querySelector(".error-text").innerHTML =

@@ -69,14 +69,40 @@ seeRoomBtn.addEventListener('click', async () => {
       ).innerHTML = `<p>${error.response.data.error}</p>`;
     });
 
+
+
+    // availableRooms.forEach(room => {
+    //     const li = document.createElement('li');
+    //     li.textContent = room.name;
+    //     li.addEventListener('click', () => {
+    //         handleRoomClick(room);
+    //     });
+    //     roomList.appendChild(li);
+    // });
+
+  // ------------------------------------------------------------------ start
+  const chatRoomList = document.querySelector('.chatRoomList');
+
+  if (!availableRooms.length) {
+    document.querySelector('.roomListTitle').textContent = 'No Room Available!';
+    document.querySelector('.roomListTitle').style.display = 'block';
+    chatRoomList.querySelector('ul').style.display = 'none';
+  } else {
+    document.querySelector('.roomListTitle').style.display = 'block';
+    chatRoomList.querySelector('ul').style.display = 'block';
+    document.getElementById('room-list').innerHTML = '';
+
     availableRooms.forEach(room => {
-        const li = document.createElement('li');
-        li.textContent = room.name;
-        li.addEventListener('click', () => {
-            handleRoomClick(room);
-        });
-        roomList.appendChild(li);
+      const li = document.createElement('li');
+      li.textContent = room.name;
+      li.addEventListener('click', () => {
+        handleRoomClick(room);
+      });
+      roomList.appendChild(li);
     });
+  }
+
+  // ------------------------------------------------------------------ end
     
 });
 
