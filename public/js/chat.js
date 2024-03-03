@@ -51,15 +51,28 @@ async function useData(number) {
     if (fetchedData) {
       console.log("Fetched data:", fetchedData);
       fetchedData.reverse();
+      $messages.innerHTML = "";
       fetchedData.map(async (msg) => {
         try {
-          const html = Mustache.render(messageTemplate, {
-            userName: msg.sender_mail,
-            message: msg.message_text,
-            createdAt: moment(msg.createdAt).format("h:mm a"),
-          });
-          $messages.insertAdjacentHTML("beforeend", html);
-          autoscroll();
+          if (msg.is_event) {
+            const html = Mustache.render(messageTemplate, {
+              userName: "",
+              message: message.text,
+              createdAt: "",
+            });
+            document.querySelector(".message__body").style.fontSize = "12px";
+            document.querySelector(".message__body").style.textAlign = "center";
+            $messages.insertAdjacentHTML("beforeend", html);
+            autoscroll();
+          } else {
+            const html = Mustache.render(messageTemplate, {
+              userName: msg.sender_mail,
+              message: msg.message_text,
+              createdAt: moment(msg.createdAt).format("h:mm a"),
+            });
+            $messages.insertAdjacentHTML("beforeend", html);
+            autoscroll();
+          }
         } catch (error) {
           console.error("Error rendering message:", error);
         }
@@ -151,12 +164,12 @@ socket.on("onlineUsers", ({ roomId, users }) => {
   document.querySelector("#sidebar").innerHTML = html;
 });
 
-socket.on('receiveMessage', (message) => {
-        // Handle received message, e.g., log it or perform custom actions
-        console.log('---------Received message:', message);
+socket.on("receiveMessage", (message) => {
+  // Handle received message, e.g., log it or perform custom actions
+  console.log("---------Received message:", message);
 
-        // Broadcast the received message to all clients in the same room
-        // const { roomId } = message;
-        // io.to(roomId).emit('receiveMessage', message);
-        useData(number);
-      });
+  // Broadcast the received message to all clients in the same room
+  // const { roomId } = message;
+  // io.to(roomId).emit('receiveMessage', message);
+  useData(number);
+});
