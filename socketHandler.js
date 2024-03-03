@@ -27,17 +27,20 @@ const socketHandler = (io) => {
 
         await saveMessage(`${userMail} joined the room`, userMail, true, roomId);
         const newMessage = prepareMessage(roomId, `${userMail} joined the room`, userMail, true)
-        await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
-        // io.to(roomId).emit('receiveMessage', newMessage);
+        // await produce(newMessage, CHAT_EVENTS)
+        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
+        io.to(roomId).emit('receiveMessage', newMessage);
       });
 
       // * SendMessage Logics
       socket.on('sendMessage', (data) => {
         const { roomId, message } = data;
+        console.log('Going from here');
         // saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
-        produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
-        // io.to(roomId).emit('receiveMessage', newMessage);
+        // produce(newMessage, CHAT_MESSAGES)
+        saveMessage(newMessage.messageText, newMessage.userMail, newMessage.isEvent, roomId)
+        io.to(roomId).emit('receiveMessage', newMessage);
       });
   
       // socket.on('receiveMessage', (message) => {
@@ -60,7 +63,11 @@ const socketHandler = (io) => {
       socket.on('getOnlineUsers', async (data) => {
         const { roomId } = data;
         const users = await getOnlineUsers(roomId);
-        socket.emit('onlineUsers', users);
+        console.log('Online users', users);
+        socket.emit('onlineUsers', {
+          roomId: roomId,
+          users: users,
+        });
       });
 
       socket.on('disconnect', async () => {

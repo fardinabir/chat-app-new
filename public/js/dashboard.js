@@ -101,7 +101,7 @@ const handleRoomClick = async (room) => {
     //   //   ".available-error-text"
     //   // ).innerHTML = `<p>${error.response.data.error}</p>`;
     // });
-    window.location.href = `chat.html?=${room.id}`
+    window.location.href = `chat.html?roomId=${room.id}&roomName=${room.name}`
 }
 
 //   createBtn.addEventListener("click", (e) => {

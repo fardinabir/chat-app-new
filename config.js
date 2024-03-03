@@ -25,11 +25,10 @@ module.exports = {
     }
   };
 
-  // docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root-pw -e MYSQL_DATABASE=chat-app -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d -p 3306:3306 mysql:latest
+// docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root-pw -e MYSQL_DATABASE=chat-app -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d -p 3306:3306 mysql:latest
 
-  // docker run --name redis-container -p 6389:6379 -d redis:latest
+// docker run --name redis-container -p 6389:6379 -d redis:latest
 
-  // docker run -p 2181:2181 zookeeper
+// docker run -p 2181:2181 zookeeper
 
 
-  

@@ -25,12 +25,12 @@ app.use(express.static('public'));
 // Use the socketHandler
 socketHandler(io);
 
-// Initialize kafka consumer
-consume(io).then(r => {
-    console.log("Working consumer")
-}).catch(err => {
-    console.log("Occurred error ", err)
-});
+// // Initialize kafka consumer
+// consume(io).then(r => {
+//     console.log("Working consumer")
+// }).catch(err => {
+//     console.log("Occurred error ", err)
+// });
 
 // Synchronize Sequelize models with the database
 (async () => {
