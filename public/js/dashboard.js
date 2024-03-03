@@ -6,6 +6,7 @@ const modal = document.getElementById("modal");
 const closeBtn = document.querySelector(".close");
 const confirmBtn = document.getElementById("confirmBtn");
 const cancelBtn = document.getElementById("cancelBtn");
+const chatRoomList = document.querySelector('.chatRoomList');
 
 leaveBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -69,15 +70,27 @@ seeRoomBtn.addEventListener('click', async () => {
       ).innerHTML = `<p>${error.response.data.error}</p>`;
     });
 
-    availableRooms.forEach(room => {
-        const li = document.createElement('li');
-        li.textContent = room.name;
-        li.addEventListener('click', () => {
-            handleRoomClick(room);
-        });
-        roomList.appendChild(li);
-    });
-    
+    if (availableRooms.length > 0) {
+      const h2 = document.createElement('h2');
+      h2.textContent = 'Available Chat Rooms';
+      const ul = document.createElement('ul');
+      ul.classList.add('roomList');
+      chatRoomList.appendChild(h2);
+      chatRoomList.appendChild(ul);
+  
+      availableRooms.forEach(room => {
+          const li = document.createElement('li');
+          li.textContent = room.name;
+          li.addEventListener('click', () => {
+              handleRoomClick(room);
+          });
+          ul.appendChild(li);
+      });
+  } else {
+      const h2 = document.createElement('h2');
+      h2.textContent = 'No Available Chat Rooms';
+      chatRoomList.appendChild(h2);
+  }
 });
 
 const handleRoomClick = async (room) => {
