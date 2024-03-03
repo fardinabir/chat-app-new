@@ -130,7 +130,7 @@ $messageForm.addEventListener("submit", (e) => {
 
   const message = e.target.elements.message.value;
 
-  socket.emit("sendMessage", { roomId: number, message });
+  socket.emit("sendMessage", { roomName: number, message });
   $messaageFormInput.value = "";
   // useData(number);
 });
@@ -140,13 +140,13 @@ socket.on("connect", () => {
 
   // Example: Sending a message
   const message = "Hello everyone!";
-  // socket.emit('sendMessage', { roomId: number, message });
-  socket.emit("joinRoom", { roomId: number });
-  socket.emit("getOnlineUsers", { roomId: number });
+  // socket.emit('sendMessage', { roomName: number, message });
+  socket.emit("joinRoom", { roomName: number });
+  socket.emit("getOnlineUsers", { roomName: number });
 });
 
-socket.on("onlineUsers", ({ roomId, users }) => {
-  console.log("getting users", { roomId, users });
+socket.on("onlineUsers", ({ roomName, users }) => {
+  console.log("getting users", { roomName, users });
 
   const html = Mustache.render(sidebarTemplate, { roomName, users });
   document.querySelector("#sidebar").innerHTML = html;
@@ -157,8 +157,8 @@ socket.on('receiveMessage', (message) => {
   console.log('---------Received message:', message);
 
   // Broadcast the received message to all clients in the same room
-  // const { roomId } = message;
-  // io.to(roomId).emit('receiveMessage', message);
+  // const { roomName } = message;
+  // io.to(roomName).emit('receiveMessage', message);
   useData(number);
 });
 

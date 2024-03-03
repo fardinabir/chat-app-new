@@ -22,9 +22,9 @@ client.connect().then(async () => {
   process.exit(1);
 });
 
-async function saveMessageToRedis(roomId, message) {
+async function saveMessageToRedis(roomName, message) {
   console.log("--------A message landed for Redis --------- ");
-  const key = `room_id_${roomId}`;
+  const key = `room_name_${roomName}`;
   try {
 
     // Push the new message to the list
@@ -39,9 +39,9 @@ async function saveMessageToRedis(roomId, message) {
     console.error("Error saving message to Redis:", error);
   }
 }
-async function cacheRecentMessages(roomId, messages) {
+async function cacheRecentMessages(roomName, messages) {
   const messageData = messages.map((message) => JSON.stringify(message));
-  const key = `room_id_${roomId}`;
+  const key = `room_name_${roomName}`;
   try {
     for (const message of messageData) {
       // Push the new message to the list
@@ -57,21 +57,21 @@ async function cacheRecentMessages(roomId, messages) {
   }
 }
 
-async function getRecentMessages(roomId, count) {
-  const key = `room_id_${roomId}`;
+async function getRecentMessages(roomName, count) {
+  const key = `room_name_${roomName}`;
   const listLength = await client.lLen(key);
   let limit = math.min(listLength, count-1)
   const messages = await client.lRange(key, 0, limit);
   return messages.map((message) => JSON.parse(message));
 }
 
-const setUserActive = async (socketId, roomId, userMail) => {
+const setUserActive = async (socketId, roomName, userMail) => {
   // set to redis, make active/delete
-  console.log("User Status update attempt to redis. ", socketId, roomId, userMail);
+  console.log("User Status update attempt to redis. ", socketId, roomName, userMail);
   const fieldsAdded = await client.hSet(
       socketId,
       {
-        roomId: roomId,
+        roomName: roomName,
         userMail: userMail,
       },
   ).then( (fieldsAdded) => {
@@ -79,26 +79,26 @@ const setUserActive = async (socketId, roomId, userMail) => {
   }).catch(err => {
     console.log("Error occurred ", err)
   })
-  await AddOnlineUsers(roomId, userMail)
+  await AddOnlineUsers(roomName, userMail)
 }
 
 const setUserOffline = async (socketId) => {
   // set to redis, make active/delete
-  const {roomId, userMail} = await client.hGetAll(socketId);
-  console.log(userMail, roomId)
+  const {roomName, userMail} = await client.hGetAll(socketId);
+  console.log(userMail, roomName)
   try {
-    await DeleteOnlineUsers(roomId, userMail)
+    await DeleteOnlineUsers(roomName, userMail)
     await client.DEL(socketId)
     console.log("User sent to offline status")
     // Return user information as an object
-    return { "userMail": userMail, "roomId": roomId };
+    return { "userMail": userMail, "roomName": roomName };
   } catch (e) {
     console.log("Error occurred ", e)
   }
 }
 
-const getOnlineUsers = async (roomId) => {
-  let key = `${roomId}_online_members`
+const getOnlineUsers = async (roomName) => {
+  let key = `${roomName}_online_members`
   try {
     // Push the new member to the online users set
     const onlineMembers = await client.sMembers(key);
@@ -114,8 +114,8 @@ const getOnlineUsers = async (roomId) => {
   }
 }
 
-const AddOnlineUsers = async (roomId, memberEmail) => {
-  let key = `${roomId}_online_members`
+const AddOnlineUsers = async (roomName, memberEmail) => {
+  let key = `${roomName}_online_members`
   try {
     // Push the new member to the online users set
     const res1 = await client.sAdd(key, memberEmail);
@@ -130,8 +130,8 @@ const AddOnlineUsers = async (roomId, memberEmail) => {
   }
 }
 
-const DeleteOnlineUsers = async (roomId, memberEmail) => {
-  let key = `${roomId}_online_members`
+const DeleteOnlineUsers = async (roomName, memberEmail) => {
+  let key = `${roomName}_online_members`
   try {
     // Push the new member to the online users set
     const res1 = await client.sRem(key, memberEmail);

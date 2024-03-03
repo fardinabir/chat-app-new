@@ -17,14 +17,14 @@ const Message = sequelize.define('Message', {
     allowNull: false,
     defaultValue: false,
   },
-  room_id: {
+  room_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
 Message.belongsTo(ChatRoom, {
-  foreignKey: 'room_id',
+  foreignKey: 'room_name',
   targetKey: 'name'
 });
 
