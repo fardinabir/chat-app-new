@@ -3,7 +3,7 @@ const {saveMessageToRedis, getRecentMessages, cacheRecentMessages} = require("..
 const recentMessages = 20
 
 async function saveMessage(messageBody, mail, isEvent, roomId) {
-    console.log("---------saving data-------");
+    console.log("---------saving data-------",messageBody, mail, isEvent, roomId);
 
     try {
         const message = await Message.create({

@@ -18,3 +18,23 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+
+  mysql-container:
+    image: 'mysql:latest'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root-pw
+      - MYSQL_DATABASE=chat-app
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=1234
+    ports:
+      - '3306:3306'
+
+  redis-container:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+
+# docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=root-pw -e MYSQL_DATABASE=chat-app 
+# -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d -p 3306:3306 mysql:latest
+
+# docker run --name redis-container -p 6389:6379 -d redis:latest

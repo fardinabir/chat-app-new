@@ -43,7 +43,6 @@ const socketHandler = (io) => {
       // * SendMessage Logics
       socket.on('sendMessage', (data) => {
         const { roomId, message } = data;
-        console.log('Going from here');
         // saveMessage(message, userMail, false, roomId);
         const newMessage = prepareMessage(roomId, message ,userMail,false)
         produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
