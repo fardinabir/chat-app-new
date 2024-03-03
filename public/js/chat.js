@@ -53,13 +53,15 @@ async function useData(number) {
       fetchedData.reverse();
       fetchedData.map(async (msg) => {
         try {
-          const html = Mustache.render(messageTemplate, {
-            userName: msg.sender_mail,
-            message: msg.message_text,
-            createdAt: moment(msg.createdAt).format("h:mm a"),
-          });
-          $messages.insertAdjacentHTML("beforeend", html);
-          autoscroll();
+          if(!msg.is_event){
+            const html = Mustache.render(messageTemplate, {
+              userName: msg.sender_mail,
+              message: msg.message_text,
+              createdAt: moment(msg.createdAt).format("h:mm a"),
+            });
+            $messages.insertAdjacentHTML("beforeend", html);
+            autoscroll();
+          }
         } catch (error) {
           console.error("Error rendering message:", error);
         }
@@ -124,6 +126,7 @@ socket.on("locationMessage", (message) => {
 
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
+  console.log("------submitting-------")
   // $messageFormButton.setAttribute('disabled', 'disabled');
 
   const message = e.target.elements.message.value;
@@ -135,9 +138,6 @@ $messageForm.addEventListener("submit", (e) => {
 
 socket.on("connect", () => {
   console.log("Connected to server");
-
-  socket.emit("joinRoom", { roomId: number });
-  socket.emit("getOnlineUsers", { roomId: number });
 
   // Example: Sending a message
   const message = "Hello everyone!";
@@ -152,11 +152,16 @@ socket.on("onlineUsers", ({ roomId, users }) => {
 });
 
 socket.on('receiveMessage', (message) => {
-        // Handle received message, e.g., log it or perform custom actions
-        console.log('---------Received message:', message);
+  // Handle received message, e.g., log it or perform custom actions
+  console.log('---------Received message:', message);
 
-        // Broadcast the received message to all clients in the same room
-        // const { roomId } = message;
-        // io.to(roomId).emit('receiveMessage', message);
-        useData(number);
-      });
+  // Broadcast the received message to all clients in the same room
+  // const { roomId } = message;
+  // io.to(roomId).emit('receiveMessage', message);
+  useData(number);
+});
+
+socket.emit("joinRoom", { roomId: number });
+socket.emit("getOnlineUsers", { roomId: number });
+
+
