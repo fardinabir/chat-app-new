@@ -50,6 +50,7 @@ async function useData(number) {
     const fetchedData = await fetchMessages(number);
     if (fetchedData) {
       console.log("Fetched data:", fetchedData);
+      $messages.innerHTML = '';
       fetchedData.reverse();
       fetchedData.map(async (msg) => {
         try {
@@ -142,6 +143,8 @@ socket.on("connect", () => {
   // Example: Sending a message
   const message = "Hello everyone!";
   // socket.emit('sendMessage', { roomId: number, message });
+  socket.emit("joinRoom", { roomId: number });
+  socket.emit("getOnlineUsers", { roomId: number });
 });
 
 socket.on("onlineUsers", ({ roomId, users }) => {
@@ -160,8 +163,5 @@ socket.on('receiveMessage', (message) => {
   // io.to(roomId).emit('receiveMessage', message);
   useData(number);
 });
-
-socket.emit("joinRoom", { roomId: number });
-socket.emit("getOnlineUsers", { roomId: number });
 
 

@@ -9,6 +9,8 @@ const chatRoutes = require('./src/routes/chatRoutes');
 const socketHandler = require('./socketHandler');
 const { consume } = require('./src/kafka/consumer');
 const { startServer, handleShutdown } = require('./serverHandler');
+const { register, login } = require('./src/controllers/authController');
+const { createChatRoom, listChatRooms, getChatMessages } = require('./src/controllers/chatController');
 
 const app = express();
 const server = http.createServer(app);
@@ -18,8 +20,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use('/auth', authRoutes);
-app.use('/api', authenticate, chatRoutes);
+app.use('/api', chatRoutes);
 app.use(express.static('public'));
 
 // Use the socketHandler
