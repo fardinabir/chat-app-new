@@ -84,9 +84,11 @@ seeRoomBtn.addEventListener('click', async () => {
   const chatRoomList = document.querySelector('.chatRoomList');
 
   if (!availableRooms.length) {
-    document.querySelector('.roomListTitle').textContent = 'No Room Available!'
+    document.querySelector('.roomListTitle').textContent = 'No Room Available!';
+    document.querySelector('.roomListTitle').style.display = 'block';
     chatRoomList.querySelector('ul').style.display = 'none';
   } else {
+    document.querySelector('.roomListTitle').style.display = 'block';
     chatRoomList.querySelector('ul').style.display = 'block';
     document.getElementById('room-list').innerHTML = '';
 
