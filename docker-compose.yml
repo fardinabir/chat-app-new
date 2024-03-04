@@ -5,7 +5,8 @@ services:
     image: 'wurstmeister/zookeeper:latest'
     ports:
       - '2181:2181'
-
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
     image: 'wurstmeister/kafka:latest'
     ports:
