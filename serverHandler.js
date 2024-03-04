@@ -6,7 +6,9 @@ async function startServer(PORT, server) {
     await sequelize.sync({ force: false }).then(() => {
         console.log('Sequelize models synchronized with the database');
         server.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
+            console.log('######################################################################');
+            console.log(`####          Server is running on http://localhost:${PORT}          ####`);
+            console.log('######################################################################');
         });
         return server; // Return the server object for graceful shutdown
     }).catch((error) => {

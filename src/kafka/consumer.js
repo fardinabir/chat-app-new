@@ -19,7 +19,7 @@ const consume = async (io) => {
       console.log("****************** Arrived in Kafka Consumer ******************")
       console.log("--------Message Topic----------", topic)
       const obj = JSON.parse(message.value);
-      console.log("our object",obj);
+      console.log("the received object",obj);
 
       if(topic === kafkaConfig.topic.CHAT_MESSAGES || topic === kafkaConfig.topic.CHAT_EVENTS){
         await saveMessage(obj.messageText, obj.userMail, obj.isEvent, obj.roomName).then(async () => {
