@@ -1,8 +1,8 @@
-const { getRecentMessages, setUserActive, setUserOffline, getOnlineUsers } = require('./utils/redisUtils');
-const {saveMessage} = require('./src/repos/chatRoom');
-const { verifyToken } = require('./utils/jwtUtils');
-const { produce } = require('./src/kafka/producer');
-const { kafkaConfig } = require('./config');
+const { getRecentMessages, setUserActive, setUserOffline, getOnlineUsers } = require('../../utils/redisUtils');
+const {saveMessage} = require('../repos/chatRoom');
+const { verifyToken } = require('../../utils/jwtUtils');
+const { produce } = require('../kafka/producer');
+const { kafkaConfig } = require('../../config');
 
 // socketHandler.js
 const socketHandler = (io) => {

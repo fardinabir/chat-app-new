@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const socketIO = require('socket.io');
 const chatRoutes = require('./src/routes/chatRoutes');
-const socketHandler = require('./socketHandler');
+const socketHandler = require('./src/handlers/socketHandler');
 const { consume } = require('./src/kafka/consumer');
-const { startServer, handleShutdown } = require('./serverHandler');
+const { startServer, handleShutdown } = require('./src/handlers/serverHandler');
 
 const app = express();
 const server = http.createServer(app);

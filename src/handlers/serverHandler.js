@@ -1,6 +1,6 @@
 // server_handler.js
 const http = require('http');
-const sequelize = require('./src/database/connection'); // Import Sequelize connection
+const sequelize = require('../database/connection'); // Import Sequelize connection
 
 async function startServer(PORT, server) {
     await sequelize.sync({ force: false }).then(() => {
