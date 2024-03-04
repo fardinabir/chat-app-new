@@ -24,7 +24,7 @@ socketHandler(io);
 
 // Initialize kafka consumer
 consume(io).then(r => {
-    console.log("Working consumer")
+    console.log("------------Working consumer, waiting for server to start-----------")
 }).catch(err => {
     console.log("Occurred error ", err)
 });
