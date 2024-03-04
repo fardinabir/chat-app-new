@@ -47,16 +47,16 @@ services:
       - "autoheal=true"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 10s
+      interval: 8s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 5s
   autoheal:
     image: willfarrell/autoheal:latest
     tty: true
     restart: always
     environment:
-      - AUTOHEAL_INTERVAL=15
+      - AUTOHEAL_INTERVAL=10
       - AUTOHEAL_START_PERIOD=15
       - AUTOHEAL_DEFAULT_STOP_TIMEOUT=10
     volumes:
