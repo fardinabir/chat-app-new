@@ -88,6 +88,8 @@ For a complete interactions follow the steps below:
  - Interact with the chatbox
  - Open another tab to join another user
 
+### Configuration
+The config file for the app is available at the project's root directory path. The configuration for database, redis, kafka is given for the docker setup. Feel free to customize these settings according to your requirements by editing the config.js file.
 
 ---
 ## Component Design
