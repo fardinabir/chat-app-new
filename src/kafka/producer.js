@@ -28,6 +28,4 @@ async function handleShutdown(signal) {
     process.exit(0); // Exit the process after consumer disconnects
 }
 
-// produce("hello polok, kafka is working.............", CHAT_EVENTS)
-
 module.exports = {produce}

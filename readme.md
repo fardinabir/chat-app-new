@@ -1,8 +1,8 @@
-NodeJS Chat Application
+Turbo Chat
 ============
 
 ## Introduction
-This is a node.js chat application powered by Kafka, Redis, and WebSocket(Socket.io). This provides robustness in realtime message processing and scalability which is the core requirement for almost every chat application for handling various chat interactions.
+A node.js chat application powered by Kafka, Redis, and WebSocket(Socket.io). This provides robustness in realtime message processing and scalability which is the core requirement for almost every chat application for handling various chat interactions.
 <p align="center">
   <a href="https://postimg.cc/XXrjccfC">
     <img src="https://i.postimg.cc/NG4KtdLp/Screenshot-2024-03-03-at-10-03-43-PM-100.png" width="271" height="310" alt="Screenshot">
