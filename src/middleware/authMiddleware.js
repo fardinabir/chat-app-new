@@ -15,7 +15,7 @@ const authenticate = (req, res, next) => {
     req.userMail = decoded.userMail;
     next();
   } catch (error) {
-    console.error(error);
+    console.error("Failed to verify token : ", error);
     return res.status(401).json({ error: 'Unauthorized: Invalid token' });
   }
 };
