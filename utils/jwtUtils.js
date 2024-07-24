@@ -7,13 +7,9 @@ const generateToken = (userId, userMail) => {
 };
 
 const verifyToken = (token) => {
-  try {
-      return jwt.verify(token, config.jwt_secret);
-  } catch (err) {
-    console.log(err);
-    return {err}
-  }
+  return jwt.verify(token, config.jwt_secret);
 };
+
 
 module.exports = { generateToken, verifyToken };
 
