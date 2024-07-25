@@ -59,7 +59,7 @@ const getMessage = async function (roomName) {
   };
 
 const getRoomName = async function (chatRoomId) {
-    console.log("------------", chatRoomId)
+    console.log("------ChatRoomId------", chatRoomId)
     try {
         const chatRoom = await ChatRoom.findOne({
             attributes: ['name'],
