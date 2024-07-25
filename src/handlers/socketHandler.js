@@ -8,12 +8,16 @@ const { kafkaConfig } = require('../../config');
 const socketHandler = (io) => {
     io.on('connection', (socket) => {
       console.log('A user connected : ', socket.id);
-      const {userMail, err} = verifyToken(socket.handshake.headers.authorization.replace('BEARER ', ''))
-      if(err) {
-        console.log("Token error : ", err)
+      
+      let userMail
+      try {
+        const decoded = verifyToken(socket.handshake.headers.authorization.replace('BEARER ', ''));
+        userMail = decoded.userMail;
+      } catch (error) {
+        console.error("Failed to verify token : ", error);
         socket.emit('receiveMessage', 'Token Unauthorized');
-        socket.disconnect(true)
-      }
+        socket.disconnect(true);
+      };
       console.log("Connected user : ", userMail)
 
       // * JoinRoom - Logics
