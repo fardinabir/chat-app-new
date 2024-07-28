@@ -50,13 +50,14 @@ const socketHandler = (io) => {
       await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
       // hit online users change
       const users = await getOnlineUsers(roomName);
-      console.log('Online users', users);
+      console.log('Online users after joining : ', users);
   
       // Broadcasts to all clients in the specified room except the sender
       // socket.to(roomName).emit('onlineUsers', {
       //     roomName: roomName,
       //     users: users,
       //   });
+
       // Broadcasts to all clients in the specified room including the sender
       io.to(roomName).emit('onlineUsers', {
         roomName: roomName,
@@ -87,7 +88,7 @@ const socketHandler = (io) => {
     return async (data) => {
     const { roomName } = data;
     const users = await getOnlineUsers(roomName);
-    console.log('Online users', users);
+    console.log('Online users fetch : ', users);
 
     // emitting to update the list of online users in each room
     socket.emit('onlineUsers', {
@@ -101,17 +102,15 @@ const socketHandler = (io) => {
     return async () => {
       try {
         const { userMail, roomName } = await setUserOffline(socket.id);
-        console.log("this data was received -> ", userMail, roomName)
-        // socket.to(roomName).emit('receiveMessage', `User ${userMail} left the chat`);
         console.log(`User ${userMail} with socket ID ${socket.id} disconnected from room ${roomName}`);
 
         // await saveMessage(`User ${userMail} left the room`, userMail, true, roomName);
         const newMessage = prepareMessage(roomName, `${userMail} left the room`, userMail, true)
         produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
-        // io.to(roomName).emit('receiveMessage', newMessage);
-        // hit online users change
+
+        // change online users list
         const users = await getOnlineUsers(roomName);
-        console.log('Online users', users);
+        console.log('Online users after disconnection : ', users);
         io.to(roomName).emit('onlineUsers', {
           roomName: roomName,
           users: users,
