@@ -23,7 +23,6 @@ const fetchMessages = async (number) => {
         },
       }
     );
-    console.log("rooms", response.data);
     return response.data;
   } catch (error) {
     console.log("errors", error);
@@ -34,7 +33,6 @@ const fetchMessages = async (number) => {
 const $messageForm = document.querySelector("#messageForm");
 const $messaageFormInput = $messageForm.querySelector("input");
 const $messageFormButton = $messageForm.querySelector("button");
-// const $sendLocationButton = document.querySelector('#send-location');
 const $messages = document.querySelector("#messages");
 const $sidebar = document.querySelector("#sidebar");
 
@@ -75,27 +73,6 @@ async function useData(number) {
           // Insert the modified HTML into the messages container
           $messages.insertAdjacentHTML('beforeend', tempElement.innerHTML);
           autoscroll();
-            
-
-
-
-            // const html = Mustache.render(messageTemplate, {
-            //   userName: "",
-            //   message: msg.text,
-            //   createdAt: "",
-            // });
-            // document.querySelector(".message__body").style.fontSize = "12px";
-            // document.querySelector(".message__body").style.textAlign = "center";
-            // $messages.insertAdjacentHTML("beforeend", html);
-            // autoscroll();
-
-            // const html = Mustache.render(messageTemplate, {
-            //   userName: msg.sender_mail,
-            //   message: msg.message_text,
-            //   createdAt: moment(msg.createdAt).format("h:mm a"),
-            // });
-            // $messages.insertAdjacentHTML("beforeend", html);
-            // autoscroll();
           } else {
             const html = Mustache.render(messageTemplate, {
               userName: msg.sender_mail,
@@ -117,12 +94,6 @@ async function useData(number) {
   }
 }
 
-useData(number);
-
-// Options
-// const { userName, room } = Qs.parse(location.search, {
-//   ignoreQueryPrefix: true,
-// });
 
 const autoscroll = () => {
   // New message element
@@ -147,26 +118,6 @@ const autoscroll = () => {
   }
 };
 
-socket.on("message", (message) => {
-  const html = Mustache.render(messageTemplate, {
-    userName: message.userName,
-    message: message.text,
-    createdAt: moment(message.createdAt).format("h:mm a"),
-  });
-  $messages.insertAdjacentHTML("beforeend", html);
-  autoscroll();
-});
-
-socket.on("locationMessage", (message) => {
-  const html = Mustache.render(locationMessageTemplate, {
-    userName: message.userName,
-    url: message.url,
-    createdAt: moment(message.createdAt).format("h:mm a"),
-  });
-  $messages.insertAdjacentHTML("beforeend", html);
-  autoscroll();
-});
-
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
   console.log("------submitting-------")
@@ -180,17 +131,14 @@ $messageForm.addEventListener("submit", (e) => {
 });
 
 socket.on("connect", () => {
-  console.log("Connected to server");
+  console.log("Connected to server....");
 
-  // Example: Sending a message
-  const message = "Hello everyone!";
-  // socket.emit('sendMessage', { roomName, message });
+  // triggers joinRoom handler, that sets chatRoom and active status
   socket.emit("joinRoom", { roomName });
-  socket.emit("getOnlineUsers", { roomName });
 });
 
 socket.on("onlineUsers", ({ roomName, users }) => {
-  console.log("getting users", { roomName, users });
+  console.log("rendering online users.....", { roomName, users });
 
   const html = Mustache.render(sidebarTemplate, { roomName, users });
   document.querySelector("#sidebar").innerHTML = html;
@@ -200,9 +148,9 @@ socket.on('receiveMessage', (message) => {
   // Handle received message, e.g., log it or perform custom actions
   console.log('---------Received message:', message);
 
+  // TODO: use this message to show up in the inboxes
+
   // Broadcast the received message to all clients in the same room
-  // const { roomName } = message;
-  // io.to(roomName).emit('receiveMessage', message);
   useData(number);
 });
 
