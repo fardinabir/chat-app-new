@@ -23,7 +23,6 @@ const fetchMessages = async (number) => {
         },
       }
     );
-    console.log("rooms", response.data);
     return response.data;
   } catch (error) {
     console.log("errors", error);
@@ -117,7 +116,7 @@ async function useData(number) {
   }
 }
 
-useData(number);
+// useData(number);
 
 // Options
 // const { userName, room } = Qs.parse(location.search, {
@@ -147,26 +146,6 @@ const autoscroll = () => {
   }
 };
 
-socket.on("message", (message) => {
-  const html = Mustache.render(messageTemplate, {
-    userName: message.userName,
-    message: message.text,
-    createdAt: moment(message.createdAt).format("h:mm a"),
-  });
-  $messages.insertAdjacentHTML("beforeend", html);
-  autoscroll();
-});
-
-socket.on("locationMessage", (message) => {
-  const html = Mustache.render(locationMessageTemplate, {
-    userName: message.userName,
-    url: message.url,
-    createdAt: moment(message.createdAt).format("h:mm a"),
-  });
-  $messages.insertAdjacentHTML("beforeend", html);
-  autoscroll();
-});
-
 $messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
   console.log("------submitting-------")
@@ -186,7 +165,6 @@ socket.on("connect", () => {
   const message = "Hello everyone!";
   // socket.emit('sendMessage', { roomName, message });
   socket.emit("joinRoom", { roomName });
-  socket.emit("getOnlineUsers", { roomName });
 });
 
 socket.on("onlineUsers", ({ roomName, users }) => {

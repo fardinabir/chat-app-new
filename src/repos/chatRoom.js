@@ -39,7 +39,7 @@ const getMessage = async function (roomName) {
                 limit: 20, // Retrieve only the last 20 messages
                 order: [['createdAt', 'DESC']], // Order by creation time (recent first)
             });
-            await cacheRecentMessages(roomName, messages); // Cache retrieved messages
+            cacheRecentMessages(roomName, messages); // Cache retrieved messages
         }
 
         return messages;
@@ -51,10 +51,9 @@ const getMessage = async function (roomName) {
             limit: 20, // Retrieve only the last 20 messages
             order: [['createdAt', 'DESC']], // Order by creation time (recent first)
         });
-        await cacheRecentMessages(roomName, messages); // Cache retrieved messages
+        cacheRecentMessages(roomName, messages); // Cache retrieved messages
         console.log("Error retrieving message from redis ", error)
         return messages
-
     }
   };
 
