@@ -3,9 +3,10 @@ Turbo Chat
 
 ## Introduction
 A node.js chat application powered by Kafka, Redis, and WebSocket(Socket.io). This provides robustness in realtime message processing and scalability which is the core requirement for almost every chat application for handling various chat interactions.
+
 <p align="center">
-  <a href="https://postimg.cc/XXrjccfC">
-    <img src="https://i.postimg.cc/NG4KtdLp/Screenshot-2024-03-03-at-10-03-43-PM-100.png" width="271" height="310" alt="Screenshot">
+  <a href='https://postimg.cc/47ZN30Lc' target='_blank'>
+    <img src='https://i.postimg.cc/JnHypVjp/ChatApp.jpg'  width="500 height="160" alt='Blank-diagram'/>
   </a>
 </p>
 
@@ -86,7 +87,12 @@ For a complete interactions follow the steps below:
  - See available rooms
  - Join a room by clicking the room name
  - Interact with the chatbox
- - Open another tab to join another user
+
+ <p align="center">
+  <a href="https://postimg.cc/XXrjccfC">
+    <img src="https://i.postimg.cc/NG4KtdLp/Screenshot-2024-03-03-at-10-03-43-PM-100.png" width="271" height="310" alt="Screenshot">
+  </a>
+</p>
 
 ### Configuration
 The config file for the app is available at the project's root directory path. The configuration for database, redis, kafka is given for the docker setup. Feel free to customize these settings according to your requirements by editing the config.js file.
@@ -97,13 +103,15 @@ In this chat application, user interaction commences through a user-friendly UI,
 
 To enhance the responsiveness of our messaging system, we leverage the combined power of Redis and MySQL databases. When a user generates a message, it undergoes a dynamic journey through our application architecture. Initially, the message is published into Kafka, our event streaming platform. Subsequently, dedicated consumers within our servers capture the message, enabling us to relay it promptly to the intended user through the WebSocket connection.
 
+<p align="center">
+  <a href='https://postimg.cc/06XCmYdV' target='_blank'>
+    <img src='https://i.postimg.cc/Y9MD584B/Blank-diagram.png'  width="385 height="240" alt='Blank-diagram'/>
+  </a>
+</p>
 
+Kafka provides distributed messaging support, ensuring scalability and reliability in our chat system. It helps connect and support multiple WebSocket servers by utilizing separate consumer groups for each server. This ensures that every message is delivered to all WebSocket servers, where each server determines which messages to send to its connected users. This architecture enables seamless scalability, handling a large number of connected users efficiently while feeding multiple WebSocket servers.
 
-[![ChatApp.jpg](https://i.postimg.cc/JnHypVjp/ChatApp.jpg)](https://postimg.cc/47ZN30Lc)
-
-To further optimize our messaging service and reduce latency, the message flow is intricately synchronized and reflected within Redis.
-
-The thoughtfully designed mapping and data flow mechanisms within our application serve the crucial purpose of correlating active users with their respective socket IDs. This carefully crafted approach ensures real-time tracking of active users within specific chat rooms through the robust capabilities of Redis.
+To further optimize our messaging service and reduce latency, the message flow is intricately synchronized and reflected within Redis. The thoughtfully designed mapping and data flow mechanisms within our application serve the crucial purpose of correlating active users with their respective socket IDs. This carefully crafted approach ensures real-time tracking of active users within specific chat rooms through the robust capabilities of Redis.
 
 <p align="center">
   <a href="https://postimg.cc/XXrjccfC">
