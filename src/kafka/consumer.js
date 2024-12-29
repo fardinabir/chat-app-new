@@ -7,7 +7,9 @@ const kafka = new Kafka({
   clientId: 'my-app',
   brokers: [kafkaConfig.host, kafkaConfig.host]
 })
-const consumer = kafka.consumer({ groupId: 'kafka' })
+
+const groupId = process.env.HOSTNAME  || `node-app-${Date.now()}`
+const consumer = kafka.consumer({ groupId })
 
 const consume = async (io) => {
   console.log("------------ Initializing Kafka Consumer -----------")
