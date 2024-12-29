@@ -43,11 +43,12 @@ const socketHandler = (io) => {
       console.log("joined Room ---------", roomName);
       socket.join(roomName);
   
-      socket.emit('receiveMessage', `Welcome ${userMail} to room no ${roomName}`);
+      let newMessage = prepareMessage(roomName, `Welcome ${userMail} to room no ${roomName}`, userMail, true)
+      socket.emit('receiveMessage', newMessage);
       await setUserActive(socket.id, roomName, userMail)
   
-      const newMessage = prepareMessage(roomName, `${userMail} joined the room`, userMail, true)
-      await produce(newMessage, kafkaConfig.topic.CHAT_EVENTS)
+      newMessage = prepareMessage(roomName, `${userMail} joined the room`, userMail, true)
+      await produceAndSaveMessage(newMessage, kafkaConfig.topic.CHAT_EVENTS)
       // hit online users change
       const users = await getOnlineUsers(roomName);
       console.log('Online users after joining : ', users);
@@ -69,9 +70,9 @@ const socketHandler = (io) => {
   const sendMessageHandler = (userMail) => {
     return async (data) => {
       const { roomName, message } = data;
-      // saveMessage(message, userMail, false, roomName);
       const newMessage = prepareMessage(roomName, message ,userMail,false)
-      produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
+
+      produceAndSaveMessage(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
       // io.to(roomName).emit('receiveMessage', newMessage);
     }
   }
@@ -106,7 +107,7 @@ const socketHandler = (io) => {
 
         // await saveMessage(`User ${userMail} left the room`, userMail, true, roomName);
         const newMessage = prepareMessage(roomName, `${userMail} left the room`, userMail, true)
-        produce(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
+        produceAndSaveMessage(newMessage, kafkaConfig.topic.CHAT_MESSAGES)
 
         // change online users list
         const users = await getOnlineUsers(roomName);
@@ -121,8 +122,21 @@ const socketHandler = (io) => {
   }
 }
 
+async function produceAndSaveMessage(message, topic) {
+  // saving messages to DB & Cache
+  await saveMessage(message.messageText, message.userMail, message.isEvent, message.roomName).then(async () => {
+    console.log("saved message to the databas & cache ")
+  }).catch(err => {
+    console.log("Error occurred ", err)
+  })
 
-const prepareMessage = (roomName, messageText, userMail, isEvent) =>  ({roomName, messageText, userMail, isEvent})
+  produce(message, topic)
+}
+
+
+function prepareMessage(roomName, messageText, userMail, isEvent) {
+  return ({ roomName, messageText, userMail, isEvent });
+}
 
 module.exports = socketHandler;
   

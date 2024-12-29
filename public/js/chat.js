@@ -43,7 +43,7 @@ const locationMessageTemplate = document.querySelector(
 ).innerHTML;
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML;
 
-async function useData(number) {
+async function loadData(number) {
   try {
     const fetchedData = await fetchMessages(number);
     if (fetchedData) {
@@ -94,7 +94,47 @@ async function useData(number) {
   }
 }
 
+loadData(number)
 
+// TODO: when user re-enters the chat, chat got cleared, a BE call should be done, when first time/ message div is empty list
+async function appendNewMsg(msg) {
+  console.log("Injecting new message at the end: ", msg)
+  try {
+    if (msg.isEvent) {
+    const htmlNew = Mustache.render(messageTemplate, {
+      userName: "",
+      message: msg.messageText,
+      createdAt: "",
+    });
+    
+    // Create a temporary element to apply styles
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = htmlNew;
+    
+    // Change the style of the desired element
+    const messageBodyElement = tempElement.querySelector('.message__body');
+    messageBodyElement.style.fontSize = '16px';
+    messageBodyElement.style.textAlign = 'center';
+    messageBodyElement.style.color = 'grey';
+    
+    // Insert the modified HTML into the messages container
+    $messages.insertAdjacentHTML('beforeend', tempElement.innerHTML);
+    autoscroll();
+    } else {
+      const html = Mustache.render(messageTemplate, {
+        userName: msg.userMail,
+        message: msg.messageText,
+        createdAt: moment().format("h:mm a"),
+      });
+      $messages.insertAdjacentHTML("beforeend", html);
+      autoscroll();
+    }
+  } catch (error) {
+    console.error("Error rendering message:", error);
+  }
+}
+
+// todo: fix the case when scroller is in some previous chats, autoscroller doesn't work automatically
 const autoscroll = () => {
   // New message element
   const $newMessage = $messages.lastElementChild;
@@ -151,7 +191,7 @@ socket.on('receiveMessage', (message) => {
   // TODO: use this message to show up in the inboxes
 
   // Broadcast the received message to all clients in the same room
-  useData(number);
+  appendNewMsg(message);
 });
 
 

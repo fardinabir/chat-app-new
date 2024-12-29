@@ -22,11 +22,11 @@ const consume = async (io) => {
       console.log("the received object",obj);
 
       if(topic === kafkaConfig.topic.CHAT_MESSAGES || topic === kafkaConfig.topic.CHAT_EVENTS){
-        await saveMessage(obj.messageText, obj.userMail, obj.isEvent, obj.roomName).then(async () => {
-          console.log("saved message to the database")
-        }).catch(err => {
-          console.log("Error occurred ", err)
-        })
+        // await saveMessage(obj.messageText, obj.userMail, obj.isEvent, obj.roomName).then(async () => {
+        //   console.log("saved message to the database")
+        // }).catch(err => {
+        //   console.log("Error occurred ", err)
+        // })
         io.to(obj.roomName).emit('receiveMessage', obj);
       }
    },

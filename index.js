@@ -25,12 +25,15 @@ socketHandler(io);
 // Initialize kafka consumer
 consume(io).then(r => {
     console.log("------------Working consumer, waiting for server to start-----------")
+
+    const srv = startServer(PORT, server);
+    handleShutdown(srv);
 }).catch(err => {
     console.log("Occurred error ", err)
 });
 
 // Synchronize Sequelize models with the database
-(async () => {
-    const srv = await startServer(PORT, server);
-    await handleShutdown(srv);
-})();
+// (async () => {
+//     const srv = await startServer(PORT, server);
+//     await handleShutdown(srv);
+// })();

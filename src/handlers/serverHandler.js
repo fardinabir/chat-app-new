@@ -2,8 +2,8 @@
 const http = require('http');
 const sequelize = require('../database/connection'); // Import Sequelize connection
 
-async function startServer(PORT, server) {
-    await sequelize.sync({ force: false }).then(() => {
+function startServer(PORT, server) {
+    sequelize.sync({ force: false }).then(() => {
         console.log('Sequelize models synchronized with the database');
         server.listen(PORT, () => {
             console.log('######################################################################');
@@ -17,7 +17,7 @@ async function startServer(PORT, server) {
     });
    }
 
-async function handleShutdown(server) {
+function handleShutdown(server) {
     process.on('SIGINT', () => {
         console.log('Received SIGINT signal (Ctrl+C)');
         sequelize.close()
